@@ -1,0 +1,13 @@
+# Ejecutar dentro de R o desde un notebook:  source("00_verificar_instalacion.R")
+pk <- c("ggplot2","vcfR","adegenet","hierfstat","pegas","vegan","LEA","IRkernel")
+ok <- sapply(pk, requireNamespace, quietly = TRUE)
+print(data.frame(paquete = pk, instalado = ok, row.names = NULL))
+cat("\nVersión de R:", as.character(getRversion()), "\n")
+cat("Carpeta de trabajo:", getwd(), "\n")
+cat("¿Existe R/helpers.R?:", file.exists("R/helpers.R"), "\n")
+if (all(ok) && file.exists("R/helpers.R")) {
+  source("R/helpers.R")
+  if (!file.exists("data/lenga_sim.vcf")) source("00_simular_datos.R")
+  cat("¿Datos simulados creados?:", file.exists("data/lenga_sim.vcf"), "\n")
+  cat("\nTODO LISTO\n")
+} else cat("\nFALTAN COSAS: revisa la sección de problemas frecuentes de la guía.\n")

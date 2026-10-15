@@ -1,0 +1,12 @@
+# data generada al ejecutar (nunca se sube)
+data/
+*.rds
+
+# R
+.Rhistory
+.RData
+.Rproj.user
+Rplots.pdf
+
+# Jupyter
+.ipynb_checkpoints/
