@@ -4,9 +4,7 @@
 # Uso:
 #     Rscript 00_verificar_instalacion.R        (o  source("00_verificar_instalacion.R"))
 #
-# Revisa los paquetes del curso y, si además estás en la carpeta completa del
-# curso, prueba el flujo de la Sección 1 (simular → importar → filtrar).
-# Funciona igual si solo tienes la carpeta de instalación.
+# Revisa que los siete paquetes estén instalados y que carguen sin errores.
 # ─────────────────────────────────────────────────────────────────────────────
 
 pk  <- c("ggplot2", "vcfR", "adegenet", "hierfstat", "pegas", "vegan", "LEA", "IRkernel")
@@ -14,9 +12,8 @@ ok  <- sapply(pk, requireNamespace, quietly = TRUE)
 ver <- sapply(pk, function(p) tryCatch(as.character(utils::packageVersion(p)), error = function(e) "—"))
 
 print(data.frame(paquete = pk, instalado = ok, version = ver, row.names = NULL))
-cat("\nVersión de R:", as.character(getRversion()), "\n")
+cat("Versión de R:", as.character(getRversion()), "\n")
 cat("Carpeta de trabajo:", getwd(), "\n")
-cat("¿Existe R/helpers.R (carpeta del curso)?:", file.exists("R/helpers.R"), "\n")
 
 falta <- pk[!ok]
 if (length(falta)) {
@@ -28,12 +25,8 @@ if (length(falta)) {
   cat("══════════════════════════════════════════════\n")
 } else if (!file.exists("R/helpers.R")) {
   cat("\n══════════════════════════════════════════════\n")
-  cat("TODO LISTO ✔  El entorno está listo: los paquetes están instalados\n")
-  cat("y cargan sin errores.\n")
-  cat("\nNo encuentro R/helpers.R porque esta carpeta es solo la instalación,\n")
-  cat("y eso es lo esperado. Cuando tengas la carpeta completa del curso,\n")
-  cat("abre Jupyter DENTRO de ella y ejecuta otra vez este script para\n")
-  cat("probar también el flujo de la Sección 1.\n")
+  cat("TODO LISTO ✔  El entorno quedó instalado: los siete paquetes\n")
+  cat("están presentes y cargan sin errores.\n")
   cat("══════════════════════════════════════════════\n")
 } else {
   # ---- Prueba del flujo de la Sección 1 --------------------------
