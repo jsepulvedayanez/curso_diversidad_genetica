@@ -10,7 +10,7 @@ Este repositorio contiene las **dos primeras secciones** del curso: del archivo 
 
 ## Contenido
 
-Cada **sección** es una unidad autónoma de contenido (puedes cubrir más de una sección por clase):
+Cada **sección** es una unidad autónoma de contenido:
 
 | Sección | Notebook | Contenido | Tarea |
 |---|---|---|---|
