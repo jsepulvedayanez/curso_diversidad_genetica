@@ -27,6 +27,8 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
+Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (ábrelas en el navegador y navega con ← →).
+
 ## Requisitos
 
 - **R** ≥ 4.2
@@ -79,6 +81,8 @@ Debe terminar con `TODO LISTO`.
 │   └── helpers.R                     # funciones del curso (importación, QC, diversidad)
 ├── docs/
 │   └── formato_vcf.md                # explicación de cada columna del VCF
+├── diapos/
+│   └── 00_introduccion_metodologia.html  # diapositivas de introducción (se abre en el navegador)
 ├── datos_ejemplo/
 │   ├── lenga_ejemplo.vcf             # VCF real recortado (3 sitios × 6 ind × 301 SNP)
 │   └── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)

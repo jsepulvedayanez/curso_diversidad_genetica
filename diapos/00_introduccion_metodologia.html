@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introducción metodológica · Genética de poblaciones con datos SNP</title>
+<style>
+  :root { --bg:#0f172a; --fg:#e2e8f0; --acc:#38bdf8; --acc2:#f472b6; --muted:#94a3b8; --card:#1e293b; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { height:100%; }
+  body { background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; overflow:hidden; }
+  .deck { position:fixed; inset:0; }
+  section.slide { position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; padding:6vh 8vw; }
+  section.slide.active { display:flex; animation:fade .35s ease; }
+  @keyframes fade { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  h1 { font-size:clamp(2.2rem,6vw,4rem); line-height:1.1; margin-bottom:2.5vh; }
+  h2 { font-size:clamp(1.6rem,4vw,2.6rem); margin-bottom:2vh; color:var(--acc); }
+  .subtitle { color:var(--muted); font-size:clamp(1rem,2.4vw,1.4rem); }
+  ul { list-style:none; font-size:clamp(1.05rem,2.6vw,1.5rem); line-height:1.5; }
+  ul li { margin:1.4vh 0; padding-left:1.4em; position:relative; }
+  ul li::before { content:"▸"; position:absolute; left:0; color:var(--acc); }
+  ul li b { color:var(--acc2); }
+  .num { display:inline-block; min-width:2.2em; color:var(--acc); font-weight:700; }
+  code { background:var(--card); padding:.1em .35em; border-radius:.3em; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em; }
+  table { border-collapse:collapse; font-size:clamp(1rem,2.4vw,1.4rem); }
+  th,td { border:1px solid var(--muted); padding:.6em 1.2em; text-align:left; }
+  th { color:var(--acc); }
+  .foot { position:fixed; bottom:2vh; right:3vw; color:var(--muted); font-size:.9rem; }
+  .hint { position:fixed; bottom:2vh; left:3vw; color:var(--muted); font-size:.85rem; }
+  .flow { display:flex; gap:.8em; flex-wrap:wrap; font-size:clamp(1rem,2.3vw,1.35rem); }
+  .flow span { background:var(--card); border:1px solid var(--muted); border-radius:.5em; padding:.5em .9em; }
+  .flow span b { color:var(--acc); }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<section class="slide active">
+  <h1>Genética de poblaciones<br>con datos SNP</h1>
+  <p class="subtitle">Introducción metodológica · curso de posgrado</p>
+</section>
+
+<section class="slide">
+  <h2>¿De qué trata este curso?</h2>
+  <ul>
+    <li>Recorremos un <b>flujo de análisis reproducible</b>, del archivo de datos a la conclusión.</li>
+    <li>Nos centramos en la <b>metodología</b>: qué hace cada paso, qué asume y cómo justificar cada decisión.</li>
+    <li>Trabajamos en <b>R</b>, con datos simulados (para practicar) y un subconjunto real.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>El flujo de análisis del curso</h2>
+  <div class="flow">
+    <span><b>1</b> Importar y QC</span>
+    <span><b>2</b> Diversidad</span>
+    <span><b>3</b> Estructura</span>
+    <span><b>4</b> Ambiente</span>
+  </div>
+  <ul style="margin-top:2.5vh">
+    <li>VCF → matriz de dosis → filtros (faltantes, MAF, LD)</li>
+    <li>Ho, He, Fis → ¿hay diferencias entre poblaciones?</li>
+    <li>Fst, PCA, ancestría → ¿cómo se agrupan?</li>
+    <li>RDA → ¿cuánta variación se asocia al ambiente?</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>La materia prima: un SNP</h2>
+  <ul>
+    <li><b>SNP</b> (polimorfismo de un solo nucleótido): una posición del genoma donde individuos llevan nucleótidos distintos.</li>
+    <li>Cada individuo tiene un <b>genotipo</b> en cada SNP: <code>0/0</code>, <code>0/1</code>, <code>1/1</code> o <code>./.</code> (faltante).</li>
+    <li>Lo convertimos a <b>dosis</b> (0, 1, 2, NA): un número con el que podemos hacer aritmética.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>De la muestra al VCF</h2>
+  <div class="flow">
+    <span>Muestreo</span><span>ADN</span><span>Secuenciación</span><span>Mapeo</span><span>Llamado</span><span>Filtrado</span><span><b>VCF</b></span>
+  </div>
+  <ul style="margin-top:2.5vh">
+    <li>El <b>VCF</b> es el final de una tubería bioinformática: una variante por fila, un genotipo por muestra.</li>
+    <li>Cada paso puede introducir <b>errores y sesgos</b> que hay que diagnosticar (eso es el QC).</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>El formato VCF</h2>
+  <table>
+    <tr><th>Columna</th><th>Qué es</th></tr>
+    <tr><td>CHROM, POS</td><td>contig y posición de la variante</td></tr>
+    <tr><td>REF, ALT</td><td>alelo de referencia y alternativo</td></tr>
+    <tr><td>QUAL, FILTER</td><td>calidad de la llamada y si pasó los filtros</td></tr>
+    <tr><td>INFO, FORMAT</td><td>anotaciones de la variante y subcampos por muestra</td></tr>
+    <tr><td>GT</td><td>el genotipo de cada individuo</td></tr>
+  </table>
+  <p class="subtitle" style="margin-top:1.5vh">Guía completa: <code>docs/formato_vcf.md</code></p>
+</section>
+
+<section class="slide">
+  <h2>De genotipo a dosis</h2>
+  <table>
+    <tr><th>Genotipo</th><th>Significado</th><th>Dosis</th></tr>
+    <tr><td><code>0/0</code></td><td>homocigoto REF</td><td>0</td></tr>
+    <tr><td><code>0/1</code></td><td>heterocigoto</td><td>1</td></tr>
+    <tr><td><code>1/1</code></td><td>homocigoto ALT</td><td>2</td></tr>
+    <tr><td><code>./.</code></td><td>faltante</td><td>NA</td></tr>
+  </table>
+  <p class="subtitle" style="margin-top:1.5vh">La dosis es un número → permite calcular frecuencias, diversidad, PCA…</p>
+</section>
+
+<section class="slide">
+  <h2>Los filtros son decisiones científicas</h2>
+  <ul>
+    <li>Datos <b>faltantes</b>, <b>MAF</b> y <b>LD</b> afectan tus estimaciones.</li>
+    <li>No hay un umbral «correcto»: hay umbrales <b>justificados y reportados</b>.</li>
+    <li>Lo que decidas aquí condiciona todo lo que viene → se escribe en Métodos.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>La pregunta metodológica</h2>
+  <ul>
+    <li><b>¿Cómo se distribuye la variación genética?</b> → diversidad + estructura.</li>
+    <li><b>¿Cuánta se asocia al ambiente?</b> → adaptación local.</li>
+    <li>Siempre con <b>incertidumbre</b> y <b>sesgo</b> cuantificados: un número sin eso no es un resultado.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Herramientas</h2>
+  <ul>
+    <li><b>R</b> en JupyterLab (kernel R).</li>
+    <li>Paquetes: <code>vcfR</code> (leer VCF), <code>adegenet</code>, <code>hierfstat</code>, <code>pegas</code>, <code>vegan</code>, <code>LEA</code>.</li>
+    <li>Un contrato de datos único: matriz <code>G</code> (individuos × SNP) + tabla <code>meta</code>.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Para discutir ahora</h2>
+  <ul>
+    <li>¿Qué es para ti «diversidad genética»? ¿Cómo la medirías?</li>
+    <li>¿Qué pasos crees que hay entre el ADN de un árbol y una conclusión sobre su población?</li>
+    <li>En cada uno de esos pasos: ¿qué podría <b>salir mal</b>?</li>
+  </ul>
+</section>
+
+</div>
+<div class="foot" id="counter">1 / 11</div>
+<div class="hint">← → o clic para navegar</div>
+<script>
+  const slides = [...document.querySelectorAll('section.slide')];
+  let i = 0;
+  const counter = document.getElementById('counter');
+  function show(n){
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s,k)=>s.classList.toggle('active', k===i));
+    counter.textContent = (i+1) + ' / ' + slides.length;
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') show(i+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') show(i-1);
+    if(e.key==='Home') show(0);
+    if(e.key==='End') show(slides.length-1);
+  });
+  document.getElementById('deck').addEventListener('click', e=>{
+    if(e.clientX > window.innerWidth/2) show(i+1); else show(i-1);
+  });
+</script>
+</body>
+</html>
