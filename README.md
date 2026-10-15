@@ -15,7 +15,7 @@ Cada **sección** es una unidad autónoma de contenido:
 | Sección | Notebook | Contenido | Tarea |
 |---|---|---|---|
 | 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Leer el abstract + formular hipótesis de diversidad |
-| 1 | `seccion1_importar_y_QC.ipynb` | VCF → matriz de dosis, QC, MAF, LD | Justificar umbrales de QC (5 líneas de Métodos) |
+| 1 | `seccion1_importar_y_QC.ipynb` | Control de calidad de **datos faltantes**: VCF → matriz de dosis → filtrado por call rate (MAF y LD quedan en un Anexo, se cierran en las Secciones 2 y 3) | 5 líneas de Métodos con los dos umbrales + tabla de sensibilidad |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
 
 Cada sección termina con una **Tarea** que se revisa al comienzo de la clase siguiente, y cada notebook incluye:
@@ -27,7 +27,7 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
-Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (44 láminas autocontenidas; se abren en el navegador y se navega con ← →). Cubren el pipeline (lab + bioinformática), el significado de cada filtro, el **desequilibrio de ligamiento (LD)** y la teoría de diversidad de las Secciones 1 y 2.
+Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (láminas autocontenidas; se abren en el navegador y se navega con ← →). Están ordenadas como el curso: **Sección 0** (del árbol al VCF: laboratorio, secuenciación y bioinformática), **Sección 1** (control de calidad de datos faltantes, en cuatro pasos), **Sección 2** (frecuencia alélica, Ho/He/Fis, MAF, incertidumbre y sesgos) y un **avance de Sección 3** sobre ligamiento (LD). Las láminas marcadas como *diferido* no se dan en la clase de hoy: están para cuando toque esa sección.
 
 ## Requisitos
 
