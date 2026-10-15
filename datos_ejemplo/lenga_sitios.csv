@@ -1,0 +1,21 @@
+loc,site,el_class,lat,lon,elev
+1,Epulaufquen,unpaired,-36.83210,-71.11340,1511
+2,San Martín de los Andes,high,-40.12630,-71.48860,1478
+3,San Martín de los Andes,low,-40.12810,-71.47990,1253
+4,Cerro Otto,high,-41.14820,-71.37830,1382
+5,Cerro Otto,low,-41.15120,-71.36580,1146
+6,La Hoya,unpaired,-42.83410,-71.25920,1442
+7,Trevelin,high,-43.05650,-71.58770,1360
+8,Trevelin,middle,-43.05480,-71.58470,1312
+9,Trevelin,low,-43.06630,-71.57400,1085
+10,Lago Guacho,high,-43.81210,-71.45130,1314
+11,Lago Guacho,low,-43.82300,-71.46290,1162
+12,José de San Martín,unpaired,-43.82810,-70.75700,1317
+13,El Triana,high,-45.60440,-71.73870,915
+14,El Triana,low,-45.61190,-71.71810,729
+15,El Chaltén,high,-49.07490,-72.90010,670
+16,El Chaltén,low,-49.09860,-72.90070,505
+17,El Calafate,high,-50.46830,-72.96870,614
+18,El Calafate,low,-50.47290,-72.97900,295
+19,Ushuaia,high,-54.81910,-68.55750,326
+20,Ushuaia,low,-54.82230,-68.56750,20

@@ -2,7 +2,7 @@
 
 Material docente en **R** para un curso de genética de poblaciones aplicado a *Nothofagus pumilio* (lenga), la especie arbórea dominante de los bosques subantárticos de Patagonia.
 
-Este repositorio contiene las **dos primeras secciones** del curso: del archivo VCF a las estimaciones de diversidad genética. Está pensado para trabajarse en **JupyterLab** con kernel de **R**, explicando en clase y con ejercicios guiados.
+Este repositorio contiene una **introducción** (Sección 0) y las **dos primeras secciones** del curso: del archivo VCF a las estimaciones de diversidad genética. Está pensado para trabajarse en **JupyterLab** con kernel de **R**, explicando en clase y con ejercicios guiados.
 
 > **Nota sobre los datos:** se usan datos **simulados** (`00_simular_datos.R`) que imitan rasgos generales de la lenga (rango latitudinal ~2.000 km, estructura alineada con la latitud, gradiente de temperatura). **No son datos biológicos reales**: sirven para practicar el flujo de análisis con una «verdad» conocida.
 
@@ -14,6 +14,7 @@ Cada **sección** es una unidad autónoma de contenido:
 
 | Sección | Notebook | Contenido | Tarea |
 |---|---|---|---|
+| 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Leer el abstract + formular hipótesis de diversidad |
 | 1 | `seccion1_importar_y_QC.ipynb` | VCF → matriz de dosis, QC, MAF, LD | Justificar umbrales de QC (5 líneas de Métodos) |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
 
@@ -71,6 +72,7 @@ Debe terminar con `TODO LISTO`.
 ## Estructura del repositorio
 
 ```
+├── seccion0_introduccion.ipynb       # Sección 0 (contexto y origen de los datos)
 ├── seccion1_importar_y_QC.ipynb      # Sección 1
 ├── seccion2_diversidad_genetica.ipynb# Sección 2
 ├── R/
