@@ -5,79 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Introducción · Genética de poblaciones con datos SNP</title>
 <style>
-  :root { --bg:#0f172a; --fg:#e2e8f0; --acc:#38bdf8; --acc2:#f472b6; --muted:#94a3b8; --card:#1e293b; }
+  :root { --bg:#0f172a; --fg:#e2e8f0; --acc:#38bdf8; --acc2:#f472b6; --ok:#34d399;
+          --muted:#94a3b8; --card:#1e293b; --line:#334155; --warn:#fbbf24; }
   * { box-sizing:border-box; margin:0; padding:0; }
   html,body { height:100%; }
   body { background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; overflow:hidden; }
   .deck { position:fixed; inset:0; }
-  section.slide { position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; padding:5vh 7vw; }
+  section.slide { position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; padding:4.5vh 6vw 6vh; }
   section.slide.active { display:flex; animation:fade .3s ease; }
   @keyframes fade { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
-  h1 { font-size:clamp(2rem,5.5vw,3.6rem); line-height:1.12; margin-bottom:2vh; }
-  h2 { font-size:clamp(1.5rem,3.6vw,2.4rem); margin-bottom:2vh; color:var(--acc); }
-  .subtitle { color:var(--muted); font-size:clamp(1rem,2.4vw,1.4rem); }
-  .kicker { color:var(--acc2); font-size:clamp(.8rem,1.6vw,1rem); letter-spacing:.06em; text-transform:uppercase; margin-bottom:1.2vh; }
-  ul { list-style:none; font-size:clamp(.98rem,2.3vw,1.38rem); line-height:1.5; }
-  ul li { margin:1.15vh 0; padding-left:1.35em; position:relative; }
+  h1 { font-size:clamp(2rem,5.2vw,3.4rem); line-height:1.12; margin-bottom:2vh; }
+  h2 { font-size:clamp(1.4rem,3.2vw,2.15rem); margin-bottom:1.6vh; color:var(--acc); line-height:1.2; }
+  h3 { font-size:clamp(1rem,2.1vw,1.3rem); }
+  .subtitle { color:var(--muted); font-size:clamp(1rem,2.2vw,1.3rem); }
+  .kicker { color:var(--acc2); font-size:clamp(.78rem,1.5vw,1rem); letter-spacing:.06em; text-transform:uppercase; margin-bottom:1vh; }
+  .badge { display:inline-block; font-size:clamp(.68rem,1.3vw,.85rem); letter-spacing:.09em; text-transform:uppercase;
+           font-weight:700; color:#0b1220; background:var(--acc); border-radius:999px; padding:.28em .85em; margin-bottom:1.2vh; }
+  .badge.s0 { background:var(--ok); } .badge.s1 { background:var(--acc); } .badge.s2 { background:var(--acc2); }
+  .badge.met { background:var(--warn); }
+  ul { list-style:none; font-size:clamp(.95rem,2.05vw,1.28rem); line-height:1.45; }
+  ul li { margin:.95vh 0; padding-left:1.35em; position:relative; }
   ul li::before { content:"▸"; position:absolute; left:0; color:var(--acc); }
   ul li b, ul li strong { color:var(--acc2); }
+  ol { font-size:clamp(.95rem,2.05vw,1.28rem); line-height:1.45; padding-left:1.5em; }
+  ol li { margin:.95vh 0; }
+  ol li b { color:var(--acc2); }
   code { background:var(--card); padding:.08em .35em; border-radius:.3em; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.88em; }
-  table { border-collapse:collapse; font-size:clamp(.9rem,2.1vw,1.25rem); }
-  th,td { border:1px solid var(--muted); padding:.5em 1em; text-align:left; }
-  th { color:var(--acc); }
-  td code { background:none; padding:0; }
+  table { border-collapse:collapse; font-size:clamp(.82rem,1.85vw,1.15rem); width:100%; }
+  th,td { border:1px solid var(--line); padding:.42em .7em; text-align:left; vertical-align:top; }
+  th { color:var(--acc); background:#172033; font-weight:600; }
+  td code { background:none; padding:0; color:var(--acc2); }
+  .small td, .small th { font-size:clamp(.78rem,1.7vw,1.02rem); padding:.35em .6em; }
   .foot { position:fixed; bottom:2vh; right:3vw; color:var(--muted); font-size:.9rem; }
   .hint { position:fixed; bottom:2vh; left:3vw; color:var(--muted); font-size:.8rem; }
-  .flow { display:flex; gap:.7em; flex-wrap:wrap; font-size:clamp(.95rem,2.2vw,1.3rem); margin:1vh 0; }
-  .flow span { background:var(--card); border:1px solid var(--muted); border-radius:.5em; padding:.45em .85em; }
+  .progress { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--acc),var(--acc2)); transition:width .25s ease; z-index:5; }
+  .flow { display:flex; gap:.55em; flex-wrap:wrap; font-size:clamp(.9rem,2vw,1.2rem); margin:1vh 0; }
+  .flow span { background:var(--card); border:1px solid var(--line); border-radius:.5em; padding:.42em .8em; }
   .flow span b { color:var(--acc); }
-  .two { display:grid; grid-template-columns:1fr 1fr; gap:1.5em; }
-  .note { margin-top:1.6vh; padding:.8em 1em; border-left:3px solid var(--acc); background:var(--card); font-size:clamp(.9rem,2vw,1.2rem); color:var(--muted); }
+  .flow span.now { border-color:var(--acc); box-shadow:0 0 0 1px var(--acc) inset; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:1.4em; align-items:center; }
+  .two.top { align-items:start; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:.8em; margin-top:1vh; }
+  .cards.c2 { grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:.6em; padding:.8em 1em; font-size:clamp(.85rem,1.9vw,1.14rem); }
+  .card h3 { color:var(--acc); margin-bottom:.35em; font-size:1em; }
+  .card.g h3 { color:var(--ok); } .card.p h3 { color:var(--acc2); } .card.w h3 { color:var(--warn); }
+  .note { margin-top:1.4vh; padding:.75em 1em; border-left:3px solid var(--acc); background:var(--card);
+          font-size:clamp(.85rem,1.9vw,1.15rem); color:var(--muted); border-radius:0 .4em .4em 0; }
+  .note.warn { border-left-color:var(--warn); }
+  .note.key { border-left-color:var(--acc2); }
+  .note.ok { border-left-color:var(--ok); }
+  .note b { color:var(--fg); }
+  .formula { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; background:#0b1220; border:1px solid var(--line);
+             border-left:3px solid var(--acc2); border-radius:.45em; padding:.55em .9em; margin:1vh 0;
+             font-size:clamp(.9rem,2vw,1.25rem); overflow-x:auto; }
+  .formula em { color:var(--muted); font-style:normal; }
+  .fig { width:100%; height:auto; max-height:46vh; }
+  .fig text { fill:var(--muted); font-size:11px; font-family:ui-monospace,Menlo,monospace; }
+  .fig .axis { stroke:#64748b; stroke-width:1; }
+  .fig .grid { stroke:#1e293b; stroke-width:1; }
+  .legend { color:var(--muted); font-size:clamp(.75rem,1.6vw,1rem); margin-top:.6em; }
+  .bars { display:flex; align-items:flex-end; gap:1.4em; height:32vh; margin:1vh 0; }
+  .bar { flex:1; display:flex; flex-direction:column; justify-content:flex-end; text-align:center; }
+  .bar .fill { background:linear-gradient(180deg,var(--acc),#1d4ed8); border-radius:.35em .35em 0 0; }
+  .bar .lbl { color:var(--muted); font-size:clamp(.78rem,1.7vw,1.05rem); margin-top:.5em; }
+  .bar .val { font-size:clamp(.85rem,1.8vw,1.1rem); margin-bottom:.3em; color:var(--fg); }
+  .heat { display:grid; grid-template-columns:repeat(6,1fr); gap:3px; max-width:330px; }
+  .heat i { display:block; aspect-ratio:1/1; border-radius:3px; }
+  .heatlab { display:grid; grid-template-columns:repeat(6,1fr); gap:3px; max-width:330px; }
+  .heatlab span { text-align:center; color:var(--muted); font-size:.75rem; }
+  .pill { display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:999px;
+          padding:.25em .75em; margin:.2em .25em; font-size:clamp(.78rem,1.7vw,1.02rem); }
+  .pill b { color:var(--acc); }
 </style>
 </head>
 <body>
+<div class="progress" id="bar"></div>
 <div class="deck" id="deck">
 
+<!-- ══════════ PORTADA ══════════ -->
 <section class="slide active">
-  <p class="kicker">Curso de posgrado</p>
+  <p class="kicker">Curso de posgrado · Secciones 0 a 2</p>
   <h1>Genética de poblaciones<br>con datos SNP</h1>
   <p class="subtitle">Del laboratorio al análisis · una introducción desde cero</p>
+  <p class="legend">Navega con ← → o clic · <span id="total"></span> láminas</p>
 </section>
 
+<!-- ══════════ SECCIÓN 0 · CONTEXTO ══════════ -->
 <section class="slide">
   <h2>El camino completo de los datos</h2>
   <div class="flow">
-    <span>Muestreo</span><span>ADN</span><span>Secuenciación</span><span>Bioinformática</span><span><b>VCF</b></span><span>Análisis</span>
+    <span>Muestreo</span><span>ADN</span><span>Secuenciación</span><span>Bioinformática</span><span class="now"><b>VCF</b></span><span>Análisis</span>
   </div>
-  <ul style="margin-top:2vh">
+  <ul style="margin-top:1.6vh">
     <li>La <b>primera mitad</b> (laboratorio + bioinformática) produce el archivo <code>VCF</code>.</li>
     <li>La <b>segunda mitad</b> (análisis) es lo que haremos en el curso.</li>
     <li>Hoy entendemos la primera mitad, para no analizar «a ciegas».</li>
   </ul>
+  <div class="note key">Un genotipo no es un dato «en bruto»: es el <b>resultado de una decisión</b> de un programa. Entender cómo se llegó a él es lo que permite saber qué puedes y qué no puedes concluir.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Conceptos mínimos</p>
+  <h2>Qué cubrimos y en qué orden</h2>
+  <div class="cards">
+    <div class="card"><h3>Sección 0 · Contexto</h3>De dónde salen los datos, cómo se generan (lab + bioinformática) y qué contienen.</div>
+    <div class="card"><h3>Sección 1 · Importar y QC</h3>VCF → matriz de dosis. Faltantes, MAF, <b>ligamiento (LD)</b> y umbrales de filtrado.</div>
+    <div class="card"><h3>Sección 2 · Diversidad</h3>Ho, He, Fis, incertidumbre (bootstrap), sesgos y gradiente latitudinal.</div>
+    <div class="card w"><h3>Más adelante</h3>Estructura (PCA/DAPC, Fst), asignación, ambiente (RDA).</div>
+  </div>
+  <div class="note">Estas láminas son el mapa: la <b>teoría</b> completa está en las celdas de texto de cada notebook, y aquí la tienes condensada para la clase.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
   <h2>Antes de los datos</h2>
   <ul>
     <li><b>ADN</b>: molécula que guarda la información genética; una secuencia de 4 nucleótidos: <code>A</code>, <code>C</code>, <code>G</code>, <code>T</code>.</li>
     <li><b>Genoma</b>: todo el ADN de un organismo.</li>
     <li><b>Locus</b> (plural <i>loci</i>): una posición concreta del genoma.</li>
     <li><b>Alelo</b>: una de las variantes de la secuencia en un locus.</li>
+    <li><b>Diploide</b>: dos copias de cada locus, una de cada progenitor. Por eso cada SNP se describe con <b>dos</b> alelos.</li>
   </ul>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
   <h2>¿Qué es un SNP?</h2>
   <ul>
     <li><b>SNP</b> (<i>Single Nucleotide Polymorphism</i>): un locus donde distintos individuos difieren en <b>un solo nucleótido</b>.</li>
     <li>Ejemplo: en cierta posición la mayoría lleva <code>A</code>; algunos individuos llevan <code>G</code>.</li>
-    <li>Llamamos <b>REF</b> al alelo de referencia y <b>ALT</b> al alternativo.</li>
+    <li><b>REF</b> = alelo de referencia (el del genoma de referencia) · <b>ALT</b> = alternativo (el otro).</li>
   </ul>
-  <div class="note">Un individuo hereda dos copias de cada locus (una de cada progenitor): por eso cada SNP se describe con dos alelos.</div>
+  <div class="note key">«Polimorfismo» es <b>relativo a la muestra</b>: un alelo presente en 1 de 500 individuos es raro, pero basta que exista dos veces para que el sitio sea variable. <b>Raro ≠ inexistente</b>, y eso tiene consecuencias al filtrar.</div>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
   <h2>Genotipo y dosis</h2>
   <table>
     <tr><th>Genotipo</th><th>Significado</th><th>Dosis (nº de ALT)</th></tr>
@@ -86,103 +149,236 @@
     <tr><td><code>1/1</code></td><td>homocigoto ALT</td><td>2</td></tr>
     <tr><td><code>./.</code></td><td>faltante (no se pudo leer)</td><td>NA</td></tr>
   </table>
-  <div class="note">La <b>dosis</b> convierte el genotipo en un número: así podemos calcular frecuencias, diversidad, PCA…</div>
+  <div class="note"><b>¿Por qué dosis y no el genotipo en texto?</b> Porque la dosis es un <b>número</b>: con números se hace aritmética. Frecuencias, heterocigosidad, PCA, Fst y RDA trabajan sobre la matriz de dosis.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Nuestros datos reales</p>
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
+  <h2>Frecuencia alélica: la dosis se vuelve estadística</h2>
+  <div class="formula">p = (suma de dosis) / (2 × nº de individuos) = media(dosis) / 2</div>
+  <p><b>Ejemplo</b> — un SNP en 12 árboles: 5 son <code>0/0</code>, 6 son <code>0/1</code> y 1 es <code>1/1</code>.</p>
+  <div class="formula">suma = 5×0 + 6×1 + 1×2 = 8  →  p = 8 / 24 = <b>0.333</b>  ·  q = 1 − p = 0.667</div>
+  <ul>
+    <li><b>p</b> = frecuencia del alelo ALT; <b>q</b> = frecuencia de REF.</li>
+    <li><b>MAF</b> (<i>minor allele frequency</i>) = <code>min(p, q)</code>: el alelo menos común. Va de 0 a 0.5.</li>
+  </ul>
+  <div class="note">Todo el curso se construye sobre esta cantidad: si te equivocas en la <b>orientación</b> de los alelos (¿quién es ALT?), las frecuencias siguen teniendo sentido, pero las comparaciones con otros estudios dejan de ser comparables.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
+  <h2>Equilibrio de Hardy-Weinberg: el modelo nulo</h2>
+  <div class="formula">p² <em>(homocigoto REF)</em> + 2pq <em>(heterocigoto)</em> + q² <em>(homocigoto ALT)</em> = 1</div>
+  <div class="two top">
+    <div class="bars">
+      <div class="bar"><span class="val">0.111</span><div class="fill" style="height:11.1%"></div><span class="lbl">p² = 0.111</span></div>
+      <div class="bar"><span class="val">0.444</span><div class="fill" style="height:44.4%"></div><span class="lbl">2pq = 0.444</span></div>
+      <div class="bar"><span class="val">0.444</span><div class="fill" style="height:44.4%"></div><span class="lbl">q² = 0.444</span></div>
+    </div>
+    <div>
+      <ul>
+        <li>Con p = 0.333, el modelo predice la izquierda.</li>
+        <li>Supuestos: apareamiento al azar, población grande, sin migración, sin selección, sin mutación.</li>
+        <li>Es <b>falso</b> casi siempre… y justamente por eso sirve: los desvíos (<b>Fis</b>) son la información.</li>
+      </ul>
+      <div class="note">Se calcula con <code>He = 2p(1−p)</code>: la heterocigosidad <b>esperada</b> si se cumple H-W.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
+  <h2>Ho, He y Fis: tres números, tres historias</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Ho · heterocigosidad observada</h3>Proporción de individuos heterocigotos. Ejemplo: 6 de 12 → Ho = 0.500.</div>
+    <div class="card"><h3>He · esperada</h3><code>He = 2p(1−p)</code> = 2(0.333)(0.667) = <b>0.444</b>. Refleja la <b>variación</b> de la población.</div>
+    <div class="card p"><h3>Fis · endogamia relativa</h3><code>Fis = 1 − Ho/He</code> = 1 − 0.500/0.444 = <b>−0.125</b> (exceso leve). Refleja <b>cómo se aparean</b>.</div>
+    <div class="card g"><h3>Lectura</h3>Fis &gt; 0: déficit de heterocigotos (endogamia, subestructura). Fis &lt; 0: exceso (mezcla reciente, o artefacto de laboratorio).</div>
+  </div>
+  <div class="note key">Ho, He y Fis pueden contar historias <b>distintas</b>: una población puede tener alta He y Fis positivo (mucha variación, pero apareamiento entre parientes). Reporta siempre los tres.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s0">Sección 0 · Conceptos mínimos</p>
+  <h2>He depende de la frecuencia: la parábola</h2>
+  <div class="two top">
+    <div>
+      <svg class="fig" viewBox="0 0 360 200" role="img" aria-label="He en función de p">
+        <line class="grid" x1="40" y1="40" x2="330" y2="40"></line>
+        <line class="grid" x1="40" y1="90" x2="330" y2="90"></line>
+        <line class="grid" x1="40" y1="140" x2="330" y2="140"></line>
+        <line class="axis" x1="40" y1="180" x2="335" y2="180"></line>
+        <line class="axis" x1="40" y1="180" x2="40" y2="26"></line>
+        <polyline fill="none" stroke="#38bdf8" stroke-width="2.5"
+          points="40.0,180.0 54.0,153.4 68.0,129.6 82.0,108.6 96.0,90.4 110.0,75.0 124.0,62.4 138.0,52.6 152.0,45.6 166.0,41.4 180.0,40.0 194.0,41.4 208.0,45.6 222.0,52.6 236.0,62.4 250.0,75.0 264.0,90.4 278.0,108.6 292.0,129.6 306.0,153.4 320.0,180.0"></polyline>
+        <line x1="54" y1="180" x2="54" y2="153.4" stroke="#f472b6" stroke-dasharray="3 3"></line>
+        <circle cx="54" cy="153.4" r="3.2" fill="#f472b6"></circle>
+        <text x="60" y="150">MAF 0.05 → He máx = 0.095</text>
+        <circle cx="180" cy="40" r="3.2" fill="#34d399"></circle>
+        <text x="184" y="34">p = 0.5 → He = 0.5</text>
+        <text x="335" y="194" text-anchor="end">p (frecuencia del alelo ALT)</text>
+        <text x="6" y="24">He</text>
+      </svg>
+      <p class="legend">He = 2p(1−p), máximo 0.5 cuando p = q = 0.5.</p>
+    </div>
+    <div>
+      <ul>
+        <li>Un SNP <b>raro</b> aporta poca heterocigosidad: con MAF 0.05, como máximo He = 0.095.</li>
+        <li>Un SNP <b>monomórfico</b> (MAF = 0) aporta <b>cero</b>.</li>
+        <li>La <b>forma de U</b> implica algo práctico: un filtro de MAF pone un <b>piso</b> a la He de tu dataset.</li>
+      </ul>
+      <div class="note warn"><b>Consecuencia directa:</b> si filtras con MAF ≥ 0.05 y luego reportas He, ya no estás midiendo la diversidad de todos tus SNP, sino la de los SNP comunes. La Sección 2 lo trata como <b>sesgo de verificación</b>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SECCIÓN 0 · ORIGEN DE LOS DATOS ══════════ -->
+<section class="slide">
+  <p class="badge s0">Sección 0 · Nuestros datos</p>
   <h2>¿De dónde salen?</h2>
   <ul>
-    <li>Sekely et al. (2024), <i>Plants, People, Planet</i> (acceso abierto).</li>
+    <li>Sekely et al. (2024), <i>Plants, People, Planet</i> · acceso abierto, datos en Zenodo (CC-BY-4.0).</li>
     <li><b>20 sitios</b> a lo largo de ~2.000 km, la mayoría con un <b>par de elevación</b> (alto/bajo).</li>
     <li><b>502 árboles</b>: 496 adultos + 6 réplicas.</li>
     <li>Secuenciación por <b>enriquecimiento de sondas</b> → ~47.000 SNP.</li>
   </ul>
+  <div class="note">En el repo trabajamos con un <b>subconjunto real</b>: 3 sitios × 6 árboles × 301 SNP (<code>datos_ejemplo/lenga_ejemplo.vcf</code>), para que puedas mirar un archivo de verdad sin descargar 495 MB.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Laboratorio</p>
+  <p class="badge s0">Sección 0 · Laboratorio</p>
   <h2>Del árbol al ADN</h2>
   <div class="flow">
     <span>Colecta</span><span>Extracción</span><span>Cuantificación</span><span>Biblioteca</span>
   </div>
-  <ul style="margin-top:2vh">
+  <ul style="margin-top:1.6vh">
     <li><b>Colecta</b>: tejido (hojas) de cada árbol, anotando sitio y coordenadas.</li>
     <li><b>Extracción</b>: romper las células y purificar el ADN.</li>
-    <li><b>Cuantificación</b>: verificar cantidad y calidad del ADN.</li>
-    <li><b>Biblioteca</b>: fragmentar el ADN y añadir adaptadores + un índice que identifica cada muestra.</li>
+    <li><b>Cuantificación</b>: verificar cantidad y calidad del ADN (<b>de aquí nacen los faltantes</b>: poco ADN ⇒ genotipos peor llamados).</li>
+    <li><b>Biblioteca</b>: fragmentar el ADN y añadir adaptadores + un <b>índice</b> que identifica cada muestra.</li>
   </ul>
 </section>
 
 <section class="slide">
-  <p class="kicker">Secuenciación</p>
-  <h2>Enriquecimiento por sondas</h2>
+  <p class="badge s0">Sección 0 · Secuenciación</p>
+  <h2>Enriquecimiento por sondas (y su consecuencia)</h2>
   <ul>
     <li>No se secuencia <b>todo</b> el genoma: unas <b>sondas</b> (cebos) capturan regiones concretas.</li>
     <li>En este estudio: <b>genes candidatos</b> + regiones asociadas al clima (1.789 genes candidatos).</li>
     <li>Resultado: muchas lecturas sobre las regiones de interés, casi ninguna en el resto.</li>
-    <li>Consecuencia: la referencia queda en <b>contigs</b> (fragmentos, p. ej. <code>NODE_12345</code>), no en cromosomas completos.</li>
+    <li>Consecuencia técnica: la referencia queda en <b>contigs</b> (p. ej. <code>NODE_12345</code>), no en cromosomas completos.</li>
   </ul>
+  <div class="note warn"><b>Consecuencia científica — y es grande:</b> tus SNP <b>no son una muestra aleatoria del genoma</b>. Son regiones elegidas a priori. La diversidad que midas describe <i>esas</i> regiones; extrapolarla a todo el genoma es un supuesto, no un hecho. Anótalo en Métodos.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Secuenciación</p>
-  <h2>Lecturas cortas (Illumina)</h2>
+  <p class="badge s0">Sección 0 · Secuenciación</p>
+  <h2>Lecturas cortas (Illumina) y cobertura</h2>
   <ul>
     <li>El secuenciador lee <b>millones de fragmentos cortos</b>: <i>reads</i> de ~150 nucleótidos.</li>
-    <li><b>Cobertura</b>: cuántas reads caen sobre cada posición. A más cobertura, más confianza.</li>
+    <li><b>Cobertura (DP)</b>: cuántas reads caen sobre cada posición. A más cobertura, más confianza.</li>
     <li>Cada read lleva un <b>índice</b> que dice de qué muestra viene.</li>
+    <li>La cobertura <b>no es pareja</b>: depende del contenido de GC, de la repetición de la secuencia y del ADN de partida.</li>
   </ul>
-  <div class="note">Los errores de secuenciación existen: no todas las reads son perfectas. Esto importa para la confianza de cada genotipo.</div>
+  <div class="note">Los errores de secuenciación existen (~0.1–1 % por base en Illumina). Con 1 read no se puede decidir un genotipo; con 20, sí. Esa es la lógica detrás de <code>DP</code> y <code>GQ</code>.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Bioinformática</p>
+  <p class="badge s0">Sección 0 · Bioinformática</p>
   <h2>De reads a genotipos: mapeo</h2>
   <ul>
     <li>Cada read se <b>alinea</b> contra un <b>genoma de referencia</b>.</li>
     <li>Aquí la referencia es un <b>ensamblaje de novo</b> fragmentado en contigs.</li>
     <li>Donde tus reads difieren de la referencia <b>de forma consistente</b> → posible variante.</li>
   </ul>
-  <div class="note">Si la referencia está fragmentada o incompleta, algunas regiones no se podrán analizar. Esa es una limitación del dato, no un error tuyo.</div>
+  <div class="note warn">Si la referencia está fragmentada o incompleta, algunas regiones no se podrán analizar. <b>Y peor:</b> lecturas de una región <b>parecida</b> (paráloga) pueden mapear donde no corresponden y producir heterocigotos falsos. Esa es la razón de ser de varios filtros.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Bioinformática</p>
+  <p class="badge s0">Sección 0 · Bioinformática</p>
   <h2>Llamado de variantes (GATK HaplotypeCaller)</h2>
   <ul>
-    <li>El software <b>GATK HaplotypeCaller</b> compara reads contra la referencia y, para cada posición y cada individuo, decide:</li>
+    <li>GATK compara reads contra la referencia y, para cada posición y cada individuo, decide <b>dos cosas</b>:</li>
     <li>¿Hay una variante? → <code>QUAL</code> (calidad de la llamada).</li>
     <li>¿Cuál es el genotipo? → <code>GT</code>, con su confianza <code>GQ</code>.</li>
-    <li>Evidencia por individuo: <code>AD</code> (lecturas de cada alelo), <code>DP</code> (cobertura), <code>PL</code> (verosimilitud de cada genotipo).</li>
+    <li>Evidencia por individuo: <code>AD</code> (lecturas por alelo), <code>DP</code> (cobertura), <code>PL</code> (verosimilitud de cada genotipo).</li>
   </ul>
+  <div class="note">Todo lo demás del VCF (<code>INFO</code>, <code>FILTER</code>) es el <b>rastro de auditoría</b> de esas dos decisiones. Por eso el QC empieza ahí.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Bioinformática</p>
-  <h2>Filtrado: separar señal de ruido</h2>
-  <ul>
-    <li>No toda variante llamada es real. El dataset filtra una variante si:</li>
-    <li><code>DP &lt; 10</code> → poca cobertura.</li>
-    <li><code>QD &lt; 2.0</code> → baja calidad por cobertura.</li>
-    <li><code>MQ &lt; 40</code> → mapeo deficiente.</li>
-    <li><code>FS &gt; 60</code> o <code>SOR &gt; 3.0</code> → sesgo de hebra.</li>
-    <li><code>MQRankSum &lt; -12.5</code> o <code>ReadPosRankSum &lt; -8</code> → sesgos de calidad de mapeo/posición.</li>
-  </ul>
-  <div class="note">Todo esto queda anotado en el VCF (<code>QUAL</code>, <code>FILTER</code>, <code>INFO</code>): es lo que revisaremos en el control de calidad.</div>
+  <p class="badge s0">Sección 0 · Bioinformática</p>
+  <h2>Por qué hay que filtrar: cinco fuentes de ruido</h2>
+  <div class="cards">
+    <div class="card"><h3>Error de secuenciación</h3>Una base mal leída con poca cobertura se convierte en «variante» que nadie más tiene.</div>
+    <div class="card"><h3>Mapeo ambiguo</h3>Regiones repetidas: reads que podrían ir a varios sitios → posiciones y genotipos falsos.</div>
+    <div class="card p"><h3>Paralogía</h3>Dos copias muy parecidas se leen como una: región con muchos heterocigotos falsos.</div>
+    <div class="card p"><h3>Sesgo de hebra</h3>El alelo ALT aparece solo en reads de una hebra: artefacto del protocolo, no biología.</div>
+    <div class="card w"><h3>Posición en la read</h3>Variantes llamadas solo con las puntas de las reads son menos fiables.</div>
+  </div>
+  <div class="note key">Regla mental: <b>un filtro es una hipótesis sobre cómo se ve el error</b>. Cada umbral que aplicas apuesta a que el ruido tiene una firma medible.</div>
 </section>
 
 <section class="slide">
-  <p class="kicker">El archivo</p>
+  <p class="badge s0">Sección 0 · Bioinformática</p>
+  <h2>Los filtros del dataset: qué mide cada uno</h2>
+  <table class="small">
+    <tr><th>Filtro aplicado</th><th>Qué mide</th><th>Qué artefacto descarta</th></tr>
+    <tr><td><code>DP &lt; 10</code></td><td>Cobertura total en la posición</td><td>Llamadas sin evidencia suficiente (genotipos al azar)</td></tr>
+    <tr><td><code>QD &lt; 2.0</code></td><td><code>QUAL / DP</code> — calidad <i>por</i> read</td><td>Cobertura alta pero calidad baja: típico de mapeo en zona repetida</td></tr>
+    <tr><td><code>MQ &lt; 40</code></td><td>Calidad de mapeo (RMS)</td><td>Reads que mapean en varios sitios: ubicación poco fiable</td></tr>
+    <tr><td><code>FS &gt; 60</code></td><td>Sesgo de hebra (test de Fisher)</td><td>ALT visto casi solo en una hebra: artefacto de secuenciación</td></tr>
+    <tr><td><code>SOR &gt; 3.0</code></td><td>Sesgo de hebra simétrico (odds ratio)</td><td>Lo mismo que FS, pero más robusto con coberturas altas</td></tr>
+    <tr><td><code>MQRankSum &lt; −12.5</code></td><td>MQ de reads con ALT <i>vs</i> con REF</td><td>El ALT viene de reads peor mapeadas → probable mala ubicación</td></tr>
+    <tr><td><code>ReadPosRankSum &lt; −8</code></td><td>Posición del ALT dentro de la read</td><td>Variantes apoyadas en las puntas: base mal llamada</td></tr>
+  </table>
+  <div class="note">Estos umbrales son los <b>del estudio real</b> (vienen en el VCF, campo <code>FILTER</code> / <code>INFO</code>). No son universales: se ajustan al diseño y se reportan.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s0">Sección 0 · Bioinformática</p>
+  <h2>Calidad por genotipo: de dónde nacen los <code>./.</code></h2>
+  <div class="cards c2">
+    <div class="card"><h3>DP · cobertura</h3>Cuantas más reads, más seguro el genotipo. Coberturas muy bajas → a menudo se deja como faltante.</div>
+    <div class="card"><h3>AD · balance alélico</h3>Un heterocigoto real debería repartir reads ~50/50. Un «heterocigoto» con 39/3 es sospechoso.</div>
+    <div class="card p"><h3>GQ · confianza</h3>Probabilidad (Phred) de que el genotipo sea correcto. Umbral típico: GQ ≥ 20.</div>
+    <div class="card p"><h3>PL · verosimilitudes</h3>La base estadística de GT y GQ: cuánto se parece el dato a cada genotipo posible.</div>
+  </div>
+  <div class="note warn">Los <b>faltantes</b> no son «datos que faltan porque sí»: son genotipos que el programa <b>no se atrevió</b> a llamar. Y no faltan al azar: faltan más donde hay poca cobertura, es decir, en ciertos individuos y ciertas regiones. En la Sección 1 veremos por qué eso introduce sesgo.</div>
+</section>
+
+<section class="slide">
+  <p class="badge met">Puente Sección 0 → 1</p>
+  <h2>El pipeline filtra variantes… pero no tu pregunta</h2>
+  <div class="two top">
+    <div>
+      <p><b>Ya hecho por el pipeline</b> (filtros de calidad técnica):</p>
+      <div class="flow"><span><b>DP</b></span><span><b>QD</b></span><span><b>MQ</b></span><span><b>FS</b></span><span><b>SOR</b></span><span><b>RankSum</b></span></div>
+      <p class="legend">Objetivo: que <b>cada genotipo</b> sea digno de confianza.</p>
+    </div>
+    <div>
+      <p><b>Falta hacer (filtros de <i>tu</i> pregunta</b> biológica):</p>
+      <div class="flow"><span><b>Faltantes</b></span><span><b>MAF</b></span><span><b>LD</b></span></div>
+      <p class="legend">Objetivo: que <b>el conjunto de SNP</b> sea adecuado para el análisis que harás.</p>
+    </div>
+  </div>
+  <div class="note key">Nadie va a hacer ese segundo filtro por ti. Y cambiará tus resultados: es la primera decisión científica del curso.</div>
+</section>
+
+<!-- ══════════ SECCIÓN 0 · EL ARCHIVO ══════════ -->
+<section class="slide">
+  <p class="badge s0">Sección 0 · El archivo</p>
   <h2>El resultado: el VCF</h2>
   <ul>
-    <li>Líneas <code>##</code>: <b>metadatos</b> (formato, definición de campos).</li>
-    <li>Línea <code>#CHROM</code>: las <b>columnas</b> — 9 fijas + una por individuo.</li>
-    <li>Filas: <b>una por variante</b>.</li>
+    <li>Líneas <code>##</code>: <b>metadatos</b> (formato, definición de campos, contigs).</li>
+    <li>Línea <code>#CHROM</code>: los <b>nombres de las columnas</b> — 9 fijas + una por individuo.</li>
+    <li>Filas: <b>una por variante</b> (un SNP).</li>
+    <li>Tamaño típico: cientos de MB en texto plano, y <b>tú solo usarás el campo <code>GT</code></b>. Así nacen los errores de memoria en R: lee por lotes o filtra antes.</li>
   </ul>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · El archivo</p>
   <h2>Las 9 columnas del VCF</h2>
   <table>
     <tr><th>Columna</th><th>Qué es</th></tr>
@@ -191,12 +387,14 @@
     <tr><td><code>REF</code>, <code>ALT</code></td><td>alelo de referencia y alternativo</td></tr>
     <tr><td><code>QUAL</code></td><td>calidad de la llamada (Phred)</td></tr>
     <tr><td><code>FILTER</code></td><td><code>PASS</code> o el filtro que falló</td></tr>
-    <tr><td><code>INFO</code></td><td>anotaciones de la variante (<code>DP</code>, <code>AF</code>…)</td></tr>
+    <tr><td><code>INFO</code></td><td>anotaciones de la variante (<code>DP</code>, <code>AF</code>, <code>QD</code>…)</td></tr>
     <tr><td><code>FORMAT</code></td><td>subcampos que lleva cada muestra</td></tr>
   </table>
+  <div class="note">Detalle campo por campo (con ejemplos de tus datos): <code>docs/formato_vcf.md</code>.</div>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · El archivo</p>
   <h2>Dentro de cada muestra: FORMAT</h2>
   <table>
     <tr><th>Subcampo</th><th>Qué es</th></tr>
@@ -206,91 +404,365 @@
     <tr><td><code>GQ</code></td><td>calidad del genotipo</td></tr>
     <tr><td><code>PL</code></td><td>verosimilitud de cada genotipo posible</td></tr>
   </table>
-  <div class="note">Para el análisis usamos sobre todo <code>GT</code>, convertido a dosis.</div>
+  <div class="note">Para el análisis usamos sobre todo <code>GT</code>, convertido a dosis. Pero <b>conservar <code>AD</code> y <code>GQ</code></b> permite volver a filtrar más tarde sin reprocesar el pipeline.</div>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · El archivo</p>
   <h2>De genotipo a dosis: la matriz G</h2>
   <ul>
     <li>Convertimos <code>GT</code> → dosis (<code>0/1/2/NA</code>).</li>
     <li>Matriz <b>individuos × SNP</b>: una fila por individuo, una columna por SNP.</li>
-    <li>Con números ya podemos calcular frecuencias, diversidad, PCA, Fst, RDA…</li>
+    <li>En el VCF es al revés (SNP × individuo): la conversión <b>transpone</b>. Un solo error de orden y todo el análisis es basura silenciosa.</li>
   </ul>
+  <div class="formula"><em># VCF (SNP × individuo)</em>  →  <b>G</b> (individuos × SNP)  →  frecuencias, He, PCA, Fst…</div>
 </section>
 
 <section class="slide">
+  <p class="badge s0">Sección 0 · El archivo</p>
   <h2>El contrato de datos del curso</h2>
-  <div class="two">
+  <div class="two top">
     <div>
-      <p><b>G</b> — matriz individuos × SNP (dosis).</p>
+      <p><b>G</b> — matriz individuos × SNP (dosis 0/1/2/NA).</p>
       <p><b>meta</b> — tabla con <code>id</code>, población, latitud, longitud, altitud.</p>
+      <p class="legend">Toda función del curso (<code>read_vcf_dosage</code>, <code>snp_summary</code>, <code>qc_filter</code>, <code>diversity_by_pop</code>) asume este formato. Solo con llevarlo a este formato, tu código funcionará con datos reales.</p>
     </div>
     <div>
-      <div class="note">Regla de oro: la fila <i>i</i> de <code>G</code> debe ser la misma fila <i>i</i> de <code>meta</code>. Siempre se verifica.</div>
+      <div class="note key"><b>Regla de oro:</b> la fila <i>i</i> de <code>G</code> debe ser la misma fila <i>i</i> de <code>meta</code>. Nunca se asume: se verifica con <code>stopifnot(all(rownames(G) == meta$id))</code>.</div>
+      <div class="note warn">Si esto se rompe, <b>nada falla y todo está mal</b>: cada población se analiza con los datos de otra.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SECCIÓN 1 · QC ══════════ -->
+<section class="slide">
+  <p class="badge s1">Sección 1 · Control de calidad</p>
+  <h2>QC: diagnosticar antes de decidir</h2>
+  <ul>
+    <li>El QC no es «limpiar datos»: es <b>medir la calidad</b> y luego <b>elegir umbrales justificados</b>.</li>
+    <li>Tres cantidades guían la decisión:</li>
+  </ul>
+  <div class="cards">
+    <div class="card"><h3>Datos faltantes</h3>¿Cuántos genotipos no se llamaron, por individuo y por SNP? (<i>call rate</i>)</div>
+    <div class="card"><h3>MAF</h3>¿Cuánta variación real hay? ¿Cuántos SNP son monomórficos o raros?</div>
+    <div class="card p"><h3>LD · ligamiento</h3>¿Mis SNP son información <b>independiente</b> o están duplicada?</div>
+  </div>
+  <div class="note">Cada umbral es una <b>decisión con consecuencias</b> sobre diversidad y estructura. Por eso se escribe en Métodos: umbral + por qué.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · Faltantes</p>
+  <h2>Datos faltantes: el sesgo que no se ve</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>Call rate</b> = proporción de genotipos llamados = 1 − (faltantes).</li>
+        <li>Por <b>individuo</b>: pocos ⇒ ADN malo, degradación, poca biblioteca.</li>
+        <li>Por <b>SNP</b>: pocos ⇒ región difícil (repeticiones, baja cobertura).</li>
+        <li>Umbrales del curso: <code>ind_cr = 0.80</code>, <code>snp_cr = 0.90</code> — <b>míralo en el histograma antes de decidir</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="note key"><b>El sesgo clave:</b> los heterocigotos se llaman <b>peor</b> con poca cobertura (hace falta ver los dos alelos). Un individuo con 40 % de faltantes suele tener su <b>Ho sesgada a la baja</b> — y si eso pasa en una población, toda la comparación entre poblaciones se distorsiona.</div>
+      <p class="legend">Pregunta de la sección: ¿los individuos descartados pertenecen a la misma población? Si sí, el filtro introdujo <b>sesgo de muestreo</b>.</p>
     </div>
   </div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Antes de analizar</p>
-  <h2>Control de calidad (QC)</h2>
-  <ul>
-    <li><b>Datos faltantes</b> (call rate): ¿cuántos genotipos se perdieron, por individuo y por SNP?</li>
-    <li><b>MAF</b> (frecuencia del alelo menor): quitar SNP monomórficos o raros.</li>
-    <li><b>LD</b> (desequilibrio de ligamiento): ¿son independientes mis SNP?</li>
-  </ul>
-  <div class="note">Cada umbral de filtrado es una decisión con consecuencias sobre el resultado final.</div>
+  <p class="badge s1">Sección 1 · MAF</p>
+  <h2>MAF: qué se gana y qué se pierde al filtrar</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>MAF</b> = frecuencia del alelo menos común, de 0 a 0.5.</li>
+        <li>MAF = 0 ⇒ SNP <b>monomórfico</b>: no varía, aporta He = 0.</li>
+        <li>Filtrar con <code>maf = 0.05</code> elimina monomórficos y raros.</li>
+        <li>Beneficio: menos SNP (más rápido), menos ruido de llamadas dudosas.</li>
+      </ul>
+      <div class="note warn"><b>Costo:</b> los alelos raros son justamente la señal de <b>cuellos de botella, expansiones y aislamiento</b>. Filtrarlos borra historia de la población.</div>
+    </div>
+    <div>
+      <div class="formula">MAF ≥ 0.05 ⇒ He por SNP ≥ 2(0.05)(0.95) = <b>0.095</b></div>
+      <table class="small">
+        <tr><th>Umbral</th><th>He mínima por SNP</th></tr>
+        <tr><td>MAF ≥ 0.01</td><td>0.020</td></tr>
+        <tr><td>MAF ≥ 0.05</td><td>0.095</td></tr>
+        <tr><td>MAF ≥ 0.10</td><td>0.180</td></tr>
+        <tr><td>MAF ≥ 0.20</td><td>0.320</td></tr>
+      </table>
+      <p class="legend">Subir el umbral <b>sube</b> la He estimada. Por eso dos estudios con distinto MAF no son comparables sin decirlo.</p>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
-  <p class="kicker">Vocabulario</p>
-  <h2>Lo que mediremos después</h2>
+  <p class="badge s1">Sección 1 · LD (1/4)</p>
+  <h2>Ligamiento: la idea sin fórmulas</h2>
   <ul>
-    <li><b>Ho / He</b>: heterocigosidad observada / esperada. <b>Fis = 1 − Ho/He</b>.</li>
-    <li><b>Fst</b>: diferenciación genética entre poblaciones.</li>
-    <li><b>PCA / DAPC</b>: ordenación para visualizar estructura.</li>
-    <li><b>RDA</b>: asociación genotipo–ambiente.</li>
+    <li>Dos loci están <b>ligados</b> si están físicamente <b>cerca</b> en el genoma: la recombinación casi no los separa, y suelen heredarse <b>juntos</b>.</li>
+    <li>Cada individuo tiene <b>dos haplotipos</b> (la combinación de alelos que recibió de cada progenitor).</li>
+    <li>Si dos SNP <b>no</b> estuvieran relacionados, la frecuencia de la combinación <code>AB</code> sería simplemente <code>p<sub>A</sub> × p<sub>B</sub></code>.</li>
+    <li>Si están asociados, esa combinación es <b>más o menos frecuente</b> de lo esperado: eso es <b>desequilibrio de ligamiento (LD)</b>.</li>
   </ul>
+  <div class="note key"><b>LD = asociación no aleatoria entre alelos de loci distintos.</b> Es una propiedad de la <b>población</b> (y de la muestra), no solo del cromosoma: se genera y se pierde por procesos poblacionales.</div>
 </section>
 
 <section class="slide">
-  <h2>Las decisiones son científicas</h2>
+  <p class="badge s1">Sección 1 · LD (2/4)</p>
+  <h2>Cómo se mide: D y r²</h2>
+  <div class="formula">D = f(AB) − p<sub>A</sub>·p<sub>B</sub>   <em>(desviación respecto de la independencia)</em></div>
+  <div class="formula">r² = D² / (p<sub>A</sub>q<sub>A</sub>·p<sub>B</sub>q<sub>B</sub>)   <em>(0 = independientes · 1 = redundantes)</em></div>
+  <div class="two top">
+    <div>
+      <p><b>Ejemplo numérico</b> — dos SNP, cuatro haplotipos:</p>
+      <table class="small">
+        <tr><th>Haplotipo</th><th>Frecuencia</th></tr>
+        <tr><td><code>AB</code></td><td>0.40</td></tr>
+        <tr><td><code>Ab</code></td><td>0.10</td></tr>
+        <tr><td><code>aB</code></td><td>0.10</td></tr>
+        <tr><td><code>ab</code></td><td>0.40</td></tr>
+      </table>
+      <p class="legend">p<sub>A</sub> = 0.50 · p<sub>B</sub> = 0.50 · D = 0.40 − 0.25 = 0.15</p>
+      <div class="formula" style="border-left-color:var(--ok)">r² = 0.15² / (0.25 × 0.25) = <b>0.36</b></div>
+    </div>
+    <div>
+      <ul>
+        <li><b>r²</b> es la medida de uso práctico: cuánto puedo <b>predecir</b> un SNP a partir del otro.</li>
+        <li>r² = 1 ⇒ son intercambiables (un «tag SNP» representa al otro).</li>
+        <li><b>D′</b> también existe: normaliza distinto y es más sensible a alelos raros. Se reporta menos en genómica de poblaciones.</li>
+        <li>Signo de D no importa para r²: <b>r² no distingue acoplamiento de repulsión</b>; D sí (información de fase).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · LD (3/4)</p>
+  <h2>De dónde viene el LD (y por qué desaparece)</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>Origen:</b> mutación reciente, <b>deriva</b>, <b>mezcla</b> de poblaciones, <b>selección</b>, endogamia y <b>estructura</b> mal separada.</li>
+        <li><b>Decaimiento:</b> la <b>recombinación</b> mezcla los haplotipos generación tras generación → r² baja con la distancia física.</li>
+        <li>Con el tiempo, dos SNP vecinos <b>dejan de estar asociados</b>… salvo que estén muy cerca o algo los mantenga juntos.</li>
+      </ul>
+      <div class="note">Detalle fino: mezclar dos poblaciones que difieren en frecuencia produce <b>LD entre loci de cromosomas distintos</b> (no ligados). LD no es sinónimo de cercanía física.</div>
+    </div>
+    <div>
+      <svg class="fig" viewBox="0 0 360 200" role="img" aria-label="Decaimiento del LD con la distancia">
+        <line class="grid" x1="40" y1="40" x2="330" y2="40"></line>
+        <line class="grid" x1="40" y1="90" x2="330" y2="90"></line>
+        <line class="grid" x1="40" y1="140" x2="330" y2="140"></line>
+        <line class="axis" x1="40" y1="180" x2="335" y2="180"></line>
+        <line class="axis" x1="40" y1="180" x2="40" y2="26"></line>
+        <line x1="40" y1="148" x2="330" y2="148" stroke="#fbbf24" stroke-dasharray="4 4"></line>
+        <polyline fill="none" stroke="#f472b6" stroke-width="2.5"
+          points="40.0,24.8 54.0,55.1 68.0,79.3 82.0,98.8 96.0,114.3 110.0,126.8 124.0,136.7 138.0,144.7 152.0,151.1 166.0,156.2 180.0,160.3 194.0,163.6 208.0,166.2 222.0,168.3 236.0,170.0 250.0,171.4 264.0,172.5 278.0,173.3 292.0,174.0 306.0,174.6 320.0,175.0"></polyline>
+        <text x="196" y="145">r² = 0.2 (umbral de poda)</text>
+        <text x="335" y="194" text-anchor="end">distancia física (kb)</text>
+        <text x="6" y="24">r²</text>
+      </svg>
+      <p class="legend">Esquema ilustrativo: r² alto a distancias cortas y decaimiento con la distancia.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · LD (4/4)</p>
+  <h2>Por qué te importa el LD en este curso</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Independencia</h3>Muchos métodos (PCA, Fst, RDA, tests) asumen SNP aproximadamente <b>independientes</b>. Con LD alto, un bloque de 20 SNP correlacionados cuenta como <b>una</b> observación, no veinte: tus p-valores quedan inflados.</div>
+    <div class="card"><h3>Diversidad (Sección 2)</h3>Para estimar He por población, <b>no hace falta podar</b>: podar elimina variación real. Aquí el LD es más un <b>diagnóstico</b> que un filtro.</div>
+    <div class="card p"><h3>Estructura (más adelante)</h3>Para PCA/DAPC y Fst sí conviene <b>podar por LD</b>, para no sobre-representar regiones.</div>
+    <div class="card g"><h3>Qué mirar</h3>r² entre SNP <b>vecinos</b> (los del mismo contig) y su decaimiento con la distancia.</div>
+  </div>
+  <div class="note">En el notebook calculamos el r² medio entre SNP vecinos: en la simulación los SNP son independientes, así que esperamos valores del orden de <b>1/n</b> (con n = 12, ≈ 0.08) — ruido de muestreo, no LD real. En lenga real esperaríamos <b>más</b> LD entre SNP cercanos del mismo contig.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · LD · práctica</p>
+  <h2>Podar por LD: cuándo, cómo y con qué</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>Cuándo:</b> estructura, PCA, Fst, RDA, GWAS. <b>No</b> por defecto en diversidad.</li>
+        <li><b>Cómo:</b> recorrer el genoma y, en cada ventana, eliminar SNP con r² &gt; umbral, conservando algunos por bloque.</li>
+        <li><b>Herramientas:</b> <code>SNPRelate::snpgdsLDpruning()</code> o PLINK <code>--indep-pairwise 50 5 0.2</code> (ventana 50 SNP · paso 5 · r² ≤ 0.2).</li>
+        <li><b>Qué documentar:</b> umbral de r², tamaño de ventana y método. Cambian el nº de SNP y, con él, todo lo de después.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="note warn"><b>Trampa frecuente:</b> en datos con captura de regiones (como los de este curso) la distancia en <b>pares de bases</b> está llena de huecos: dos SNP «vecinos» en el archivo pueden estar a megabases. Podar por ventana genómica, no por posición en la tabla.</div>
+      <div class="note ok">Buen hábito: reporta <b>cuántos SNP</b> quedan antes y después de cada filtro (faltantes → MAF → LD). Es una tabla de una línea que hace tu Métodos verificable.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · Filtrado</p>
+  <h2>Tabla maestra: los filtros del curso y sus consecuencias</h2>
+  <table class="small">
+    <tr><th>Filtro</th><th>Umbral</th><th>Elimina</th><th>Consecuencia sobre diversidad / estructura</th></tr>
+    <tr><td>Call rate individuo</td><td><code>≥ 0.80</code></td><td>Individuos con mucho faltante</td><td>Evita Ho sesgada a la baja; puede sesgar el muestreo si se concentra en una población</td></tr>
+    <tr><td>Call rate SNP</td><td><code>≥ 0.90</code></td><td>SNP llamados en pocos individuos</td><td>Quita regiones difíciles; si quedan pocos individuos por SNP, He se vuelve inestable</td></tr>
+    <tr><td>MAF</td><td><code>≥ 0.05</code></td><td>Monomórficos y raros</td><td><b>Sube</b> He (piso 0.095); borra señal de cuellos de botella</td></tr>
+    <tr><td>LD (poda)</td><td><code>r² ≤ 0.2</code></td><td>SNP redundantes</td><td>Necesario para estructura; en diversidad elimina información</td></tr>
+    <tr><td>Heterocigosidad excesiva</td><td><code>Ho &gt; 0.6</code></td><td>Probables parálogos</td><td>Quita heterocigotos falsos; se decide caso a caso</td></tr>
+  </table>
+  <div class="note">Los tres primeros son los que aplica <code>qc_filter()</code> en la Sección 1. El orden importa: filtrar individuos primero <b>cambia</b> qué SNP pasan el umbral, y viceversa.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Sección 1 · Filtrado</p>
+  <h2>La decisión es científica, no trámite</h2>
   <ul>
     <li>No hay un umbral «correcto»: hay umbrales <b>justificados y reportados</b>.</li>
-    <li>Todo se documenta (sección de Métodos).</li>
-    <li>Un número <b>sin incertidumbre</b> ni sesgo conocido no es un resultado.</li>
+    <li>Tres preguntas antes de fijar un umbral:</li>
   </ul>
+  <div class="cards">
+    <div class="card"><h3>¿Qué elimino?</h3>Mira el histograma: ¿el corte separa una cola clara o parte la masa de datos?</div>
+    <div class="card"><h3>¿A quién elimino?</h3>¿La pérdida se concentra en una población, una región o un par de elevación?</div>
+    <div class="card p"><h3>¿Cambia mi conclusión?</h3>Repite el análisis con 2–3 combinaciones: si la conclusión se sostiene, es robusta.</div>
+  </div>
+  <div class="note key">Un número <b>sin incertidumbre</b> ni sesgo conocido no es un resultado. Y un filtro sin justificación escrita no es un método.</div>
+</section>
+
+<!-- ══════════ SECCIÓN 2 · DIVERSIDAD ══════════ -->
+<section class="slide">
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>Diversidad por población: qué calculamos</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>He</b> por SNP con <b>corrección de Nei</b> <code>2n/(2n−1)</code>: con pocos individuos la He simple <b>subestima</b> (n = 6 ⇒ factor 1.09; n = 12 ⇒ 1.04).</li>
+        <li><b>Ho</b> = proporción de heterocigotos.</li>
+        <li><b>Fis = 1 − Ho/He</b> por población.</li>
+        <li><b>Proporción de SNP polimórficos</b>: otra cara de la diversidad.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="note">Todo se resume <b>promediando sobre SNP</b>. Ojo: ese promedio cambia si cambias el filtro de MAF (los SNP raros aportan He pequeña y bajan el promedio; eliminarlos lo sube).</div>
+      <div class="note warn">Con n = 12 individuos por sitio, un <b>Fis negativo</b> aislado puede ser puro ruido. No se interpreta un valor suelto.</div>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
-  <h2>Herramientas</h2>
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>La hipótesis: ¿hay gradiente con la latitud?</h2>
+  <ul>
+    <li>Distribución de ~2.000 km de norte a sur. Pregunta: <b>¿cambia la diversidad con la latitud?</b></li>
+    <li>Se ajusta <code>He ~ latitud</code> y una correlación de Spearman.</li>
+    <li>Se comparan regiones (Norte · Centro · Sur) con <b>Kruskal-Wallis</b> (no paramétrico, pensado para pocos grupos).</li>
+  </ul>
+  <div class="note warn"><b>Dos advertencias que valen más que el p-valor:</b><br>
+  1. <b>n = 20 poblaciones</b>, y poblaciones vecinas <b>no son independientes</b> (comparten historia). Un p-valor ingenuo es demasiado optimista.<br>
+  2. El <b>esfuerzo de muestreo</b> puede diferir entre regiones, y eso solo ya produce patrones.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>Incertidumbre: bootstrap sobre SNP</h2>
+  <div class="two top">
+    <div>
+      <ul>
+        <li><b>Bootstrap:</b> remuestrear los SNP <b>con reemplazo</b> y recalcular la estadística en cada réplica (p. ej. B = 200).</li>
+        <li>El rango central (2.5 %–97.5 %) es un intervalo de confianza aproximado.</li>
+        <li>Si los intervalos de dos poblaciones <b>se solapan</b>, la diferencia no es clara con estos datos.</li>
+        <li>Asume que los SNP son <b>intercambiables</b>: con LD fuerte, el bootstrap se queda corto.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="note key">Cambio de hábito: en vez de <i>«L01 tiene más He que L20»</i>, escribe <i>«He(L01) = 0.xx [0.xx–0.xx]; los intervalos se solapan, por lo que no hay evidencia de diferencia»</i>.</div>
+      <div class="note ok">Este es el estándar de la tarea de la sección: un gráfico con barras de error y una conclusión <b>sin</b> la palabra «significativo».</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>Los dos sesgos que debes saber nombrar</h2>
+  <div class="cards c2">
+    <div class="card w"><h3>Sesgo por tamaño muestral</h3>Con n pequeño, He se subestima y la dispersión entre poblaciones crece. Submuestrear 4, 6, 8, 12 individuos y ver cuándo se estabiliza es la forma de fijar tu <b>n mínimo aceptable</b>.</div>
+    <div class="card w"><h3>Sesgo de verificación (<i>ascertainment</i>)</h3>Los SNP llegan filtrados por MAF, por calidad y por diseño (captura de genes candidatos). La diversidad que mides es la de <b>esos</b> marcadores: no es comparable con estudios que usaron otros filtros.</div>
+  </div>
+  <div class="note">Regla de comparación: solo puedes contrastar con la literatura si el <b>tipo de marcador</b> y el <b>filtro</b> son comparables. Si no, dilo explícitamente en la discusión.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>Alelos privados: señal de aislamiento… y de muestreo</h2>
+  <ul>
+    <li><b>Alelo privado</b>: variante presente en una sola región y ausente en las demás.</li>
+    <li>Interpretación biológica: aislamiento, historia independiente, refugios, cuellos de botella.</li>
+    <li><b>Pero:</b> dependen del <b>tamaño de muestra</b>. Más individuos ⇒ más variantes raras detectadas ⇒ más «privados».</li>
+  </ul>
+  <div class="note warn">Por eso se comparan regiones <b>solo</b> con tamaños equivalentes, o se aplica <b>rarefacción</b> (igualar el n por remuestreo) antes de sacar conclusiones.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s2">Sección 2 · Diversidad</p>
+  <h2>Vocabulario: lo que mediremos después</h2>
+  <div class="cards">
+    <div class="card"><h3>Ho / He / Fis</h3>Variación y apareamiento <b>dentro</b> de poblaciones (hoy).</div>
+    <div class="card"><h3>Fst</h3>Diferenciación genética <b>entre</b> poblaciones: cuánta variación reparte la estructura.</div>
+    <div class="card p"><h3>PCA / DAPC</h3>Ordenación para <b>ver</b> estructura: agrupa individuos parecidos.</div>
+    <div class="card p"><h3>RDA</h3>Asociación genotipo–<b>ambiente</b>: ¿la variación sigue al clima o a la geografía?</div>
+    <div class="card g"><h3>Alelos privados</h3>Señal de aislamiento (con la cautela del n).</div>
+  </div>
+  <div class="note">Continúa en las secciones siguientes: estructura, asignación individual y ambiente. Todo con la misma matriz <code>G</code> y el mismo contrato de datos.</div>
+</section>
+
+<!-- ══════════ CIERRE ══════════ -->
+<section class="slide">
+  <h2>Herramientas y reproducibilidad</h2>
   <ul>
     <li><b>R</b> en JupyterLab (kernel R).</li>
-    <li>Paquetes: <code>vcfR</code>, <code>adegenet</code>, <code>hierfstat</code>, <code>pegas</code>, <code>vegan</code>, <code>LEA</code>.</li>
-    <li>Todo reproducible: mismo dato + mismo código → mismo resultado.</li>
+    <li>Paquetes: <code>vcfR</code>, <code>adegenet</code>, <code>hierfstat</code>, <code>pegas</code>, <code>vegan</code>, <code>LEA</code> (+ <code>SNPRelate</code> / PLINK si vas a podar por LD).</li>
+    <li>Todo reproducible: <b>mismo dato + mismo código + misma semilla</b> → mismo resultado.</li>
+    <li>Y reportable: filtros, umbrales y versiones van en Métodos.</li>
   </ul>
+  <div class="note ok">El repo trae los datos, las funciones (<code>R/helpers.R</code>) y las celdas de teoría. Si algo no corre, es un problema de la <b>carpeta de trabajo</b> o del <b>kernel</b>, casi nunca del código.</div>
 </section>
 
 <section class="slide">
   <h2>Para discutir</h2>
-  <ul>
+  <ol>
     <li>¿En qué pasos del pipeline (lab o bioinformática) se podrían colar <b>errores</b>?</li>
-    <li>¿Qué es para ti «diversidad genética»? ¿Cómo la medirías?</li>
-    <li>Si dos muestras tienen genotipos distintos, ¿qué lo podría explicar además de genética real?</li>
-  </ul>
+    <li>Si subes el umbral de MAF de 0.05 a 0.20, ¿sube o baja tu He? ¿Por qué?</li>
+    <li>Encuentras un «bloque» de 30 SNP con r² entre 0.7 y 1. ¿Es biología o artefacto? ¿Cómo lo distinguirías?</li>
+    <li>Un individuo tiene 45 % de genotipos faltantes y Ho muy baja. ¿Lo eliminas? ¿Qué mirarías antes?</li>
+    <li>Un Fis negativo suele interpretarse como «exceso de heterocigotos». Menciona una explicación <b>no biológica</b>.</li>
+  </ol>
+  <div class="note key">Estas cinco preguntas son el tipo de razonamiento que se evalúa: cada umbral es una decisión, y cada decisión tiene un efecto medible sobre el resultado.</div>
+</section>
+
+<section class="slide">
+  <h2>Lo que viene</h2>
+  <div class="cards">
+    <div class="card"><h3>Sección 3</h3>Estructura poblacional: PCA, DAPC y Fst. Aquí sí podamos por LD.</div>
+    <div class="card"><h3>Sección 4</h3>Asignación individual y mezcla (admixture).</div>
+    <div class="card p"><h3>Sección 5</h3>Genotipo–ambiente: RDA y variables climáticas.</div>
+    <div class="card p"><h3>Sección 6</h3>Síntesis: integrar diversidad, estructura y ambiente en tu reporte.</div>
+  </div>
+  <div class="note">Antes de pasar: la <b>tarea</b> de la Sección 1 son 5 líneas de Métodos (umbrales elegidos y por qué), y la de la Sección 2 es un gráfico de He con barras de error bootstrap. Ambas se revisan al inicio de la clase siguiente.</div>
 </section>
 
 </div>
-<div class="foot" id="counter">1 / 23</div>
+<div class="foot" id="counter">1 / 1</div>
 <div class="hint">← → o clic para navegar</div>
 <script>
   const slides = [...document.querySelectorAll('section.slide')];
   let i = 0;
   const counter = document.getElementById('counter');
+  const bar = document.getElementById('bar');
+  document.getElementById('total').textContent = slides.length;
   function show(n){
     i = (n + slides.length) % slides.length;
     slides.forEach((s,k)=>s.classList.toggle('active', k===i));
     counter.textContent = (i+1) + ' / ' + slides.length;
+    bar.style.width = (100 * (i+1) / slides.length) + '%';
   }
   document.addEventListener('keydown', e=>{
     if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') show(i+1);
@@ -301,7 +773,7 @@
   document.getElementById('deck').addEventListener('click', e=>{
     if(e.clientX > window.innerWidth/2) show(i+1); else show(i-1);
   });
-  counter.textContent = '1 / ' + slides.length;
+  show(0);
 </script>
 </body>
 </html>

@@ -27,7 +27,7 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
-Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (ábrelas en el navegador y navega con ← →).
+Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (44 láminas autocontenidas; se abren en el navegador y se navega con ← →). Cubren el pipeline (lab + bioinformática), el significado de cada filtro, el **desequilibrio de ligamiento (LD)** y la teoría de diversidad de las Secciones 1 y 2.
 
 ## Requisitos
 
