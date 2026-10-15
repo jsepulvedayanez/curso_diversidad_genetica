@@ -75,6 +75,11 @@ Debe terminar con `TODO LISTO`.
 ├── seccion2_diversidad_genetica.ipynb# Sección 2
 ├── R/
 │   └── helpers.R                     # funciones del curso (importación, QC, diversidad)
+├── docs/
+│   └── formato_vcf.md                # explicación de cada columna del VCF
+├── datos_ejemplo/
+│   ├── lenga_ejemplo.vcf             # VCF real recortado (3 sitios × 6 ind × 301 SNP)
+│   └── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)
 ├── 00_instalar_paquetes.R            # instala dependencias (ruta B)
 ├── 00_simular_datos.R                # genera el VCF y metadatos simulados
 ├── 00_verificar_instalacion.R        # chequea que todo esté listo
@@ -89,6 +94,21 @@ Todo el curso trabaja con un contrato simple:
 - `meta`: `data.frame` con una fila por individuo (`id`, `pop`, `lat`, `lon`, `alt`).
 
 Si tienes datos reales, basta con llevarlos a ese formato (`data/geno_clean.rds` + `data/meta_clean.rds`) y el resto del código corre sin cambios.
+
+## Datos reales de ejemplo
+
+Además de la simulación, el repo incluye un **VCF real** de lenga ya recortado para empezar sin descargar nada:
+
+```
+datos_ejemplo/lenga_ejemplo.vcf       # 3 sitios × 6 individuos × 301 SNP (solo el campo GT)
+datos_ejemplo/lenga_ejemplo_meta.csv  # id, pop, loc, lat, lon, alt
+```
+
+- Los 3 sitios cubren todo el rango latitudinal: **Epulaufquen** (norte, ~36.8°S), **Lago Guacho** (centro, ~43.8°S) y **Ushuaia** (sur, ~54.8°S).
+- Viene **sin filtrar** a propósito (incluye SNP monomórficos y raros) para que practiques el QC de la Sección 1.
+- La explicación de cada columna del VCF está en [`docs/formato_vcf.md`](docs/formato_vcf.md).
+
+**Fuente y licencia:** subconjunto del dataset de Sekely et al. (2024), *Plants, People, Planet* (DOI: 10.1002/ppp3.10504), depositado en Zenodo (DOI: 10.5281/zenodo.10018374) bajo licencia **CC-BY-4.0**.
 
 ## Licencia
 
