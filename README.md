@@ -35,6 +35,8 @@ Para arrancar la primera clase, hay un juego de **diapositivas de introducción*
 - Paquetes de R: `ggplot2`, `vcfR`, `adegenet`, `hierfstat`, `pegas`, `vegan`, `LEA` y `IRkernel`
 - **JupyterLab** con kernel de R
 
+Guía de instalación paso a paso, con tres rutas alternativas (conda, R propio y Colab) y una tabla de problemas frecuentes: [`docs/guia_instalacion.md`](docs/guia_instalacion.md). Al terminar, `Rscript 00_verificar_instalacion.R` debe terminar en **`TODO LISTO`**.
+
 ### Instalación
 
 La forma más simple es con Miniforge + conda (entorno aislado, sin tocar tu R):
