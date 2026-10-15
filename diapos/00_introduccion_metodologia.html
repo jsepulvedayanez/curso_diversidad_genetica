@@ -361,11 +361,11 @@
 
 <!-- ══════════ SECCIÓN 1 ══════════ -->
 <section class="slide">
-  <p class="badge s1">Sección 1</p><span class="badge diff">hoy</span>
+  <p class="badge s1">Sección 1</p><span class="badge diff">hoy · todo el bloque</span>
   <h2>Esta sección es control de calidad de datos</h2>
   <ul>
     <li>No hay genética de poblaciones todavía: hay <b>datos faltantes</b>.</li>
-    <li>Cuatro pasos, y ninguno exige teoría nueva:</li>
+    <li>Cuatro pasos, ninguno exige teoría nueva:</li>
   </ul>
   <div class="cards">
     <div class="card step"><h3><span class="stepnum">1</span>Leer el VCF</h3>Reconocer las tres partes del archivo.</div>
@@ -374,6 +374,17 @@
     <div class="card step"><h3><span class="stepnum">4</span>Filtrar y guardar</h3>Contar qué se pierde y dejar la matriz lista.</div>
   </div>
   <div class="note ok">Si vienes de datos de expresión: es la misma lógica de filtrar células con pocos genes o genes detectados en pocas células. Cambian los nombres, no la idea.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">La idea central</p>
+  <h2>Un solo número: el <i>call rate</i></h2>
+  <div class="formula">call rate = genotipos llamados / genotipos totales = 1 − proporción de faltantes</div>
+  <div class="cards c2">
+    <div class="card"><h3>Por individuo</h3>¿Qué proporción de los 1 500 SNP se pudo leer en este árbol? Bajo ⇒ problema de <b>muestra</b>: poco ADN, degradación, poca biblioteca.</div>
+    <div class="card p"><h3>Por SNP</h3>¿En qué proporción de los 240 árboles se pudo leer este SNP? Bajo ⇒ problema de <b>región</b>: repeticiones, cobertura desigual, mapeo difícil.</div>
+  </div>
+  <div class="note key">Dos diagnósticos distintos sobre el mismo dato. Uno se arregla descartando una muestra; el otro, descartando una variante. <b>No se decide lo mismo con ambos.</b></div>
 </section>
 
 <section class="slide">
@@ -389,41 +400,99 @@
 
 <section class="slide">
   <p class="badge s1">Paso 2 de 4</p>
-  <h2>Armar la matriz y verificar la alineación</h2>
+  <h2>De genotipo a dosis: por qué <i>transponemos</i></h2>
+  <div class="two top">
+    <div>
+      <p><b>En el VCF</b> (SNP × individuo):</p>
+      <div class="flow"><span>SNP 1</span><span>SNP 2</span><span>SNP 3</span></div>
+      <p class="legend">una fila por variante, una columna por árbol.</p>
+    </div>
+    <div>
+      <p><b>En la matriz G</b> (individuo × SNP):</p>
+      <div class="flow"><span>individuo 1</span><span>individuo 2</span><span>individuo 3</span></div>
+      <p class="legend">una fila por árbol, una columna por SNP.</p>
+    </div>
+  </div>
+  <div class="note">La conversión <b>da vuelta la tabla</b>. Y cada genotipo se vuelve un número: <code>0/0</code>→0, <code>0/1</code>→1, <code>1/1</code>→2, <code>./.</code>→<code>NA</code>.</div>
+  <div class="note warn">Si te equivocas de orden, <b>no falla nada</b>: la matriz tiene la forma correcta y los números correctos, pero asignados al individuo equivocado.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Paso 2 de 4</p>
+  <h2>La regla de oro: <code>G</code> y <code>meta</code> alineados</h2>
+  <div class="formula">stopifnot(all(rownames(G) == meta$id))</div>
   <ul>
-    <li>Convertimos <code>GT</code> → dosis y <b>transponemos</b>: una fila por árbol, una columna por SNP.</li>
-    <li>La tabla de muestras (<code>meta</code>) se ordena <b>exactamente igual</b>.</li>
-    <li><code>stopifnot(all(rownames(G) == meta$id))</code> — el <code>stopifnot</code> no es decorativo: es la única alarma que existe.</li>
+    <li>La fila <i>i</i> de la matriz tiene que ser la <b>misma fila <i>i</i></b> de la tabla de muestras.</li>
+    <li><code>stopifnot</code> no es decoración: es la <b>única alarma</b> que existe.</li>
+    <li>Se verifica <b>siempre</b>, aunque el orden «se vea bien».</li>
   </ul>
-  <div class="note warn">Con los datos simulados ya sabemos que está alineado. Con tus datos reales, <b>este es el paso que salva proyectos</b>.</div>
+  <div class="note warn">Si esto se rompe: <b>nada falla y todo está mal</b>. Cada población se analiza con los datos de otra, y los resultados se ven perfectamente razonables.</div>
 </section>
 
 <section class="slide">
   <p class="badge s1">Paso 3 de 4</p>
-  <h2>Diagnosticar datos faltantes</h2>
-  <ul>
-    <li><b>Call rate</b> = proporción de genotipos llamados = 1 − (faltantes). Se calcula por individuo y por SNP.</li>
-    <li>Pocos llamados en un <b>individuo</b> ⇒ ADN de mala calidad, degradación, poca biblioteca.</li>
-    <li>Pocos llamados en un <b>SNP</b> ⇒ región difícil de genotipar (repeticiones, baja cobertura).</li>
-    <li>Se mira el <b>histograma</b> antes de decidir: ¿el corte separa una cola clara o parte la masa de datos?</li>
-  </ul>
-  <div class="note key">Pregunta de la sección: ¿los individuos con muchos faltantes pertenecen a <b>una misma población</b>? Si sí, el filtro introduce <b>sesgo de muestreo</b>.</div>
+  <h2>Diagnóstico por individuo (datos del curso)</h2>
+  <div class="two top">
+    <div><svg class="fig" viewBox="0 0 360 196" role="img" aria-label="histograma de call rate por individuos"><line x1="46" y1="133.5" x2="336" y2="133.5" stroke="#233047"/><line x1="46" y1="97.0" x2="336" y2="97.0" stroke="#233047"/><line x1="46" y1="60.5" x2="336" y2="60.5" stroke="#233047"/><rect x="191.0" y="167.8" width="8.4" height="2.2" fill="#38bdf8"/><rect x="200.7" y="167.8" width="8.4" height="2.2" fill="#38bdf8"/><rect x="307.0" y="24.0" width="8.4" height="146.0" fill="#38bdf8"/><text x="311.8" y="35.0" text-anchor="middle" font-size="10" fill="#0b1220" font-weight="700">202</text><rect x="316.7" y="146.9" width="8.4" height="23.1" fill="#38bdf8"/><line x1="46" y1="170" x2="336" y2="170" stroke="#94a3b8" stroke-width="1.4"/><line x1="46" y1="170" x2="46" y2="24" stroke="#94a3b8" stroke-width="1.4"/><line x1="239.3" y1="170" x2="239.3" y2="24" stroke="#f87171" stroke-width="1.8" stroke-dasharray="4 3"/><text x="243.3" y="34" text-anchor="end" font-size="11" fill="#f87171" font-weight="700">umbral 0.8 </text><text x="46.0" y="184" text-anchor="middle" font-size="10.5" fill="#e2e8f0">0.4</text><text x="142.7" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.6</text><text x="191.0" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.7</text><text x="239.3" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.8</text><text x="287.7" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.9</text><text x="336.0" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">1.0</text><text x="191" y="194" text-anchor="middle" font-size="10.5" fill="#e2e8f0">proporción de genotipos llamados (call rate)</text><text x="4" y="30" font-size="10.5" fill="#e2e8f0">individuos</text></svg><p class="legend">Cola aislada a la izquierda: <b>6 individuos</b> entre 0.71 y 0.73 · masa principal: <b>234 árboles</b> entre 0.94 y 0.97.</p></div>
+    <div>
+      <ul>
+        <li>La mayoría de los árboles está entre <b>0.94 y 0.97</b>: leen casi todo.</li>
+        <li>Y hay una <b>cola separada</b>: 6 individuos entre 0.71 y 0.73.</li>
+        <li>Con el corte en 0.80, la decisión es fácil: <b>el histograma se parte solo</b>.</li>
+      </ul>
+      <div class="note key">Échale el ojo al histograma <b>siempre</b>: si el corte parte la masa de datos por la mitad, el umbral no está justificado por los datos.</div>
+    </div>
+  </div>
 </section>
 
 <section class="slide">
   <p class="badge s1">Paso 3 de 4</p>
-  <h2>El sesgo que no se ve</h2>
+  <h2>Diagnóstico por SNP (datos del curso)</h2>
+  <div class="two top">
+    <div><svg class="fig" viewBox="0 0 360 196" role="img" aria-label="histograma de call rate por SNP"><line x1="46" y1="133.5" x2="336" y2="133.5" stroke="#233047"/><line x1="46" y1="97.0" x2="336" y2="97.0" stroke="#233047"/><line x1="46" y1="60.5" x2="336" y2="60.5" stroke="#233047"/><rect x="94.3" y="169.6" width="8.4" height="0.4" fill="#fb923c"/><rect x="104.0" y="169.5" width="8.4" height="0.5" fill="#fb923c"/><rect x="113.7" y="167.9" width="8.4" height="2.1" fill="#fb923c"/><rect x="123.3" y="167.9" width="8.4" height="2.1" fill="#fb923c"/><rect x="133.0" y="167.1" width="8.4" height="2.9" fill="#fb923c"/><rect x="142.7" y="168.0" width="8.4" height="2.0" fill="#fb923c"/><rect x="152.3" y="169.6" width="8.4" height="0.4" fill="#fb923c"/><rect x="162.0" y="169.6" width="8.4" height="0.4" fill="#fb923c"/><rect x="297.3" y="163.2" width="8.4" height="6.8" fill="#fb923c"/><rect x="307.0" y="83.3" width="8.4" height="86.7" fill="#fb923c"/><text x="311.8" y="94.3" text-anchor="middle" font-size="10" fill="#0b1220" font-weight="700">486</text><rect x="316.7" y="24.0" width="8.4" height="146.0" fill="#fb923c"/><text x="321.5" y="35.0" text-anchor="middle" font-size="10" fill="#0b1220" font-weight="700">818</text><rect x="326.3" y="152.5" width="8.4" height="17.5" fill="#fb923c"/><line x1="46" y1="170" x2="336" y2="170" stroke="#94a3b8" stroke-width="1.4"/><line x1="46" y1="170" x2="46" y2="24" stroke="#94a3b8" stroke-width="1.4"/><line x1="287.7" y1="170" x2="287.7" y2="24" stroke="#f87171" stroke-width="1.8" stroke-dasharray="4 3"/><text x="291.7" y="34" text-anchor="end" font-size="11" fill="#f87171" font-weight="700">umbral 0.9 </text><text x="46.0" y="184" text-anchor="middle" font-size="10.5" fill="#e2e8f0">0.4</text><text x="142.7" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.6</text><text x="191.0" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.7</text><text x="239.3" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.8</text><text x="287.7" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">0.9</text><text x="336.0" y="184" text-anchor="middle" font-size="10" fill="#cbd5e1">1.0</text><text x="191" y="194" text-anchor="middle" font-size="10.5" fill="#e2e8f0">proporción de genotipos llamados (call rate)</text><text x="4" y="30" font-size="10.5" fill="#e2e8f0">SNP</text></svg><p class="legend">Izquierda: <b>60 SNP</b> entre 0.50 y 0.66 · derecha: <b>1 440 SNP</b> sobre 0.92 · en el medio, un hueco sin datos.</p></div>
+    <div>
+      <ul>
+        <li><b>60 SNP</b> se leyeron en menos del 90 % de los árboles.</li>
+        <li>Entre 0.66 y 0.92 hay un <b>hueco</b>: el umbral cae en una zona vacía.</li>
+        <li>Causa habitual: región repetida, cobertura baja, mapeo ambiguo.</li>
+      </ul>
+      <div class="note">Un SNP llamado en 8 de 240 árboles no es un SNP raro: es una variante <b>mal genotipada</b>. Distinto de un alelo raro, que sí existe.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Paso 3 de 4 · la pregunta que importa</p>
+  <h2>¿A quién elimino? Los 6 individuos, uno por uno</h2>
+  <table class="small">
+    <tr><th>Individuo</th><th>Call rate</th><th>Población</th></tr>
+    <tr><td><code>L09_04</code></td><td>0.707</td><td>L09</td></tr>
+    <tr><td><code>L02_09</code></td><td>0.709</td><td>L02</td></tr>
+    <tr><td><code>L15_08</code></td><td>0.718</td><td>L15</td></tr>
+    <tr><td><code>L13_05</code></td><td>0.728</td><td>L13</td></tr>
+    <tr><td><code>L14_04</code></td><td>0.729</td><td>L14</td></tr>
+    <tr><td><code>L02_12</code></td><td>0.730</td><td>L02</td></tr>
+    <tr><td><i>— corte en 0.80 —</i></td><td><i>—</i></td><td><i>—</i></td></tr>
+    <tr><td><code>L07_11</code></td><td>0.941</td><td>L07</td></tr>
+  </table>
+  <div class="note ok">En <b>estos</b> datos: 5 poblaciones distintas (L02 aporta 2) y un salto de 0.73 a 0.94. El filtro <b>no</b> vacía ninguna población: cada sitio afectado conserva 11 de sus 12 árboles.</div>
+  <div class="note warn">Pero esto no es automático: es lo que hay que <b>comprobar</b> en tus datos. Si los 6 fueran de una misma población, el filtro introduce sesgo de muestreo.</div>
+</section>
+
+<section class="slide">
+  <p class="badge s1">Paso 3 de 4 · el sesgo que no se ve</p>
+  <h2>Los que se caen <i>no son</i> una muestra al azar</h2>
   <div class="two top">
     <div>
       <ul>
-        <li>Los <b>heterocigotos se llaman peor</b> cuando hay poca cobertura: hace falta ver los dos alelos.</li>
-        <li>Entonces un individuo con 40 % de faltantes suele tener su heterocigosidad <b>sesgada a la baja</b>.</li>
-        <li>Si eso ocurre en una población, la comparación entre poblaciones se distorsiona <b>antes</b> de empezar.</li>
+        <li>Los <b>heterocigotos se llaman peor</b> con poca cobertura: hay que ver los dos alelos.</li>
+        <li>Un árbol con más faltantes tiende a tener su heterocigosidad <b>subestimada</b>.</li>
+        <li>Si eso se concentra en un sitio, la comparación <b>entre poblaciones</b> ya nace distorsionada.</li>
       </ul>
     </div>
     <div>
-      <div class="note warn"><b>El faltante no es aleatorio.</b> Faltan más datos donde hay menos cobertura: en ciertos individuos, en ciertas regiones, y a veces en todo un sitio.</div>
-      <div class="note ok">Paralelo útil: en expresión, una célula con pocos genes detectados no es una célula cualquiera; filtrarla cambia la composición de la muestra.</div>
+      <div class="note"><b>En los datos del curso:</b> Ho media de los 6 descartados = <b>0.270</b>; de los 234 retenidos = <b>0.265</b>. El efecto es <b>chico</b>, porque aquí los faltantes se simularon casi al azar.</div>
+      <div class="note warn">En datos reales la cobertura <b>no</b> es pareja, y ahí el sesgo sí se nota. El paso 3 no se salta porque el número dé parecido: se hace para <b>saber</b> si dio parecido.</div>
     </div>
   </div>
 </section>
@@ -431,32 +500,41 @@
 <section class="slide">
   <p class="badge s1">Paso 4 de 4</p>
   <h2>Filtrar, contar y guardar</h2>
-  <table>
-    <tr><th>Etapa</th><th>Individuos</th><th>SNP</th><th>Faltantes</th></tr>
-    <tr><td>Original</td><td>240</td><td>1 500</td><td>5.1 %</td></tr>
-    <tr><td>Filtrado</td><td>234</td><td>1 174</td><td>3.0 %</td></tr>
-  </table>
-  <p class="legend">Cifras de los datos simulados del curso con <code>ind_cr = 0.80</code>, <code>snp_cr = 0.90</code> (las reproduce el notebook; los datos reales darán otras).</p>
-  <ul style="margin-top:1.2vh">
-    <li>Se pierden <b>6 individuos</b> y <b>326 SNP</b>: conviene saber <b>quiénes</b> son, no solo cuántos.</li>
-    <li>Se guarda <code>geno_clean.rds</code> + <code>meta_clean.rds</code>: lo que usarán las secciones siguientes.</li>
-  </ul>
+  <div class="two top">
+    <div>
+      <table>
+        <tr><th>Etapa</th><th>Individuos</th><th>SNP</th><th>Faltantes</th></tr>
+        <tr><td>Original</td><td>240</td><td>1 500</td><td>5.14 %</td></tr>
+        <tr><td>Filtrado</td><td>234</td><td>1 174</td><td>2.99 %</td></tr>
+      </table>
+      <p class="legend">Con <code>ind_cr = 0.80</code> y <code>snp_cr = 0.90</code> (valores reproducibles con el notebook).</p>
+    </div>
+    <div>
+      <div class="note"><b>¿Qué se fue, y por qué?</b><br>
+      · <b>6 individuos</b> con call rate &lt; 0.80.<br>
+      · <b>60 SNP</b> con call rate &lt; 0.90.<br>
+      · <b>266 SNP</b> con MAF &lt; 0.05 — umbral <b>fijo hoy</b>, se justifica en la Sección 2.</div>
+      <div class="note ok">Y se guarda: <code>geno_clean.rds</code> + <code>meta_clean.rds</code>. Eso es lo que usan todas las secciones siguientes.</div>
+    </div>
+  </div>
   <div class="note key">Tabla de una línea, enorme valor: <b>cuánto cambia el dato con cada umbral</b>. Eso es lo que va en Métodos.</div>
 </section>
 
 <section class="slide">
   <p class="badge s1">Paso 4 de 4</p>
   <h2>La decisión es científica, no trámite</h2>
-  <ul>
-    <li>No hay un umbral «correcto»: hay umbrales <b>justificados y reportados</b>.</li>
-    <li>Tres preguntas antes de fijar un umbral:</li>
-  </ul>
   <div class="cards">
     <div class="card"><h3>¿Qué elimino?</h3>¿El corte separa una cola clara o parte la masa de datos?</div>
     <div class="card"><h3>¿A quién elimino?</h3>¿La pérdida se concentra en una población, una región o un par de elevación?</div>
-    <div class="card p"><h3>¿Cambia mi conclusión?</h3>Repite con 2–3 combinaciones: si la conclusión se sostiene, es robusta.</div>
+    <div class="card p"><h3>¿Cambia mi conclusión?</h3>Repite con 2–3 combinaciones: si se sostiene, es robusta.</div>
   </div>
-  <div class="note key">Un número <b>sin incertidumbre</b> ni sesgo conocido no es un resultado. Y un filtro sin justificación escrita no es un método.</div>
+  <table class="small" style="margin-top:1.2vh">
+    <tr><th>individuos ↓ / SNP →</th><th><code>snp_cr = 0.80</code></th><th><code>snp_cr = 0.90</code></th><th><code>snp_cr = 0.95</code></th></tr>
+    <tr><td><code>ind_cr = 0.70</code></td><td>240 · 1 177</td><td>240 · 1 177</td><td>240 · 1 053</td></tr>
+    <tr><td><code>ind_cr = 0.80</code></td><td><b>234 · 1 174</b></td><td><b>234 · 1 174</b></td><td>234 · 1 104</td></tr>
+    <tr><td><code>ind_cr = 0.90</code></td><td>234 · 1 174</td><td>234 · 1 174</td><td>234 · 1 104</td></tr>
+  </table>
+  <div class="note warn">Lee la tabla con cuidado: 0.80 y 0.90 dan <b>lo mismo</b> porque no hay SNP en esa zona. Que un umbral no cambie nada <b>también se reporta</b>: significa que tus datos no son sensibles a esa decisión.</div>
 </section>
 
 <section class="slide">
@@ -464,12 +542,12 @@
   <h2>Lo que queda pendiente (y dónde se cierra)</h2>
   <table class="small">
     <tr><th>Queda pendiente</th><th>Dónde se cierra</th></tr>
-    <tr><td><b>Justificar el umbral de MAF</b> (hoy queda fijo en 0.05)</td><td><b>Sección 2</b>: se mide cuánto cambia He según el umbral.</td></tr>
+    <tr><td><b>Justificar el umbral de MAF</b> (hoy queda fijo en 0.05, y quita 266 SNP)</td><td><b>Sección 2</b>: se mide cuánto cambia He según el umbral.</td></tr>
     <tr><td><b>Ligamiento (LD)</b>: qué SNP son información redundante</td><td><b>Sección 3</b>: se poda por LD antes de analizar estructura.</td></tr>
     <tr><td><b>Exceso de heterocigotos</b> (posible paralogía)</td><td><b>Sección 2</b>, dentro del diagnóstico de diversidad.</td></tr>
   </table>
   <div class="note">En el notebook, los dos primeros están presentados en el <b>Anexo A</b> con su código: no se dan hoy, pero quedan a mano.</div>
-  <div class="note ok"><b>Tarea:</b> 5 líneas con los <b>dos</b> umbrales de faltantes y su justificación + la tabla de sensibilidad. Se revisa al inicio de la Sección 2.</div>
+  <div class="note ok"><b>Tarea:</b> 5 líneas con los <b>dos</b> umbrales de faltantes y su justificación + la tabla de sensibilidad (la que acabas de ver, con tus números). Se revisa al inicio de la Sección 2.</div>
 </section>
 
 <!-- ══════════ SECCIÓN 2 ══════════ -->

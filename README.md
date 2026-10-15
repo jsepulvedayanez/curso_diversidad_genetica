@@ -27,7 +27,7 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
-Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (láminas autocontenidas; se abren en el navegador y se navega con ← →). Están ordenadas como el curso: **Sección 0** (del árbol al VCF: laboratorio, secuenciación y bioinformática), **Sección 1** (control de calidad de datos faltantes, en cuatro pasos), **Sección 2** (frecuencia alélica, Ho/He/Fis, MAF, incertidumbre y sesgos) y un **avance de Sección 3** sobre ligamiento (LD). Las láminas marcadas como *diferido* no se dan en la clase de hoy: están para cuando toque esa sección.
+Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (**51 láminas** autocontenidas; se abren en el navegador y se navega con ← →). Están ordenadas como el curso: **Sección 0** (del árbol al VCF: laboratorio, secuenciación y bioinformática), **Sección 1** (control de calidad de datos faltantes, en cuatro pasos, con las cifras y figuras reales de los datos del curso), **Sección 2** (frecuencia alélica, Ho/He/Fis, MAF, incertidumbre y sesgos) y un **avance de Sección 3** sobre ligamiento (LD). Las láminas marcadas como *diferido* no se dan en la clase de hoy: están para cuando toque esa sección.
 
 ## Requisitos
 
