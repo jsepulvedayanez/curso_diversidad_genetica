@@ -2,6 +2,10 @@
 data/
 *.rds
 
+# macOS
+.DS_Store
+._*
+
 # R
 .Rhistory
 .RData
