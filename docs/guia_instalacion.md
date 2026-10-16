@@ -37,17 +37,17 @@ Descarga el instalador para tu sistema desde <https://github.com/conda-forge/min
 Copia y pega **una sola línea** (puede tardar varios minutos):
 
 ```
-conda create -n lenga -c conda-forge -c bioconda r-base r-irkernel jupyterlab r-ggplot2 r-vcfr r-adegenet r-hierfstat r-pegas r-vegan bioconductor-lea
+conda create -n genetica -c conda-forge -c bioconda r-base r-irkernel jupyterlab r-ggplot2 r-vcfr r-adegenet r-hierfstat r-pegas r-vegan bioconductor-lea
 ```
 
 Cuando pregunte `Proceed ([y]/n)?`, escribe `y` y Enter.
 
 ### 3. Activar el entorno
 ```
-conda activate lenga
+conda activate genetica
 ```
 
-Debe aparecer `(lenga)` al inicio de la línea. **Este paso se repite cada vez que abras una terminal nueva.**
+Debe aparecer `(genetica)` al inicio de la línea. **Este paso se repite cada vez que abras una terminal nueva.**
 
 ### 4. Verificar
 Con el entorno activado, en la carpeta donde descomprimiste estos archivos:
@@ -86,7 +86,7 @@ Debe listar los siete paquetes como `TRUE` y terminar con **`TODO LISTO ✔`**. 
 | La instalación se queda en `Solving environment` | Es normal si tarda varios minutos. Si pasan más de 30, cancela con **Ctrl + C** y avísame. |
 | `there is no package called 'xxx'` | En R: `install.packages("xxx")`. Para `LEA`: `BiocManager::install("LEA")`. |
 | Error de compilación en Windows | Falta **Rtools**, o su versión no coincide con tu R. |
-| `Rscript` no se reconoce como comando | El entorno no está activado: vuelve al paso 3 (`conda activate lenga`). |
+| `Rscript` no se reconoce como comando | El entorno no está activado: vuelve al paso 3 (`conda activate genetica`). |
 | Al verificar aparece algo en `FALSE` | Ese paquete no quedó instalado. El script dice cuál falta y con qué comando instalarlo. |
 | Quiero comprobar el kernel de R | Con el entorno activado: `R -e "IRkernel::installspec(user = TRUE)"`. |
 

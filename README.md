@@ -42,10 +42,10 @@ Guía de instalación paso a paso, con tres rutas alternativas (conda, R propio 
 La forma más simple es con Miniforge + conda (entorno aislado, sin tocar tu R):
 
 ```bash
-conda create -n lenga -c conda-forge -c bioconda \
+conda create -n genetica -c conda-forge -c bioconda \
   r-base r-irkernel jupyterlab r-ggplot2 r-vcfr \
   r-adegenet r-hierfstat r-pegas r-vegan bioconductor-lea
-conda activate lenga
+conda activate genetica
 ```
 
 O, si ya tienes R instalado por separado, dentro de R:
