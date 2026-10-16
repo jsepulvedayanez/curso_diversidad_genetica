@@ -5,6 +5,8 @@ Material docente en **R** para un curso de genética de poblaciones aplicado a *
 Este repositorio contiene una **introducción** (Sección 0) y las **dos primeras secciones** del curso: del archivo VCF a las estimaciones de diversidad genética. Está pensado para trabajarse en **JupyterLab** con kernel de **R**, explicando en clase y con ejercicios guiados.
 
 > **Nota sobre los datos:** se usan datos **simulados** (`00_simular_datos.R`) que imitan rasgos generales de la lenga (rango latitudinal ~2.000 km, estructura alineada con la latitud, gradiente de temperatura). **No son datos biológicos reales**: sirven para practicar el flujo de análisis con una «verdad» conocida.
+>
+> Aparte, el repositorio **sí incluye datos reales de ejemplo** en `datos_ejemplo/`: un recorte de Sekely et al. (2024) —3 sitios × 6 árboles × 301 SNP— que se usa en la Sección 0 para mirar un VCF verdadero. El conjunto completo de ese estudio (20 sitios, 502 árboles, ~47.000 SNP; VCF de 495 MB) está disponible en Zenodo, DOI [`10.5281/zenodo.10018374`](https://doi.org/10.5281/zenodo.10018374) (CC-BY-4.0), pero el curso **no** lo necesita.
 
 ---
 
@@ -55,7 +57,7 @@ El repositorio **no incluye** los datos de trabajo: se generan con una semilla f
 Rscript 00_simular_datos.R            # escribe data/lenga_sim.vcf y los metadatos
 ```
 
-Si `data/` está vacío, los notebooks no pueden leer el VCF: este paso es obligatorio antes de la Sección 1.
+Si `data/` está vacío, los notebooks no pueden leer el VCF: este paso es obligatorio antes de la Sección 1. Los **datos reales de ejemplo** (`datos_ejemplo/`) ya vienen en el repositorio: no hay que descargar nada.
 
 ### 4. Abrir los notebooks
 
