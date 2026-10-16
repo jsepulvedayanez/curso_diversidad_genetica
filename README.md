@@ -27,6 +27,51 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
+## Cómo empezar
+
+### 1. Traer el repositorio
+
+```bash
+git clone https://github.com/jsepulvedayanez/curso_diversidad_genetica.git
+cd curso_diversidad_genetica
+```
+
+Si no tienes `git`, descarga el ZIP con **Code → Download ZIP** en la página del repositorio.
+
+### 2. Preparar el entorno (una sola vez)
+
+Sigue la guía de instalación que te enviamos (`COMO_INSTALAR.docx`); la misma guía está en este repositorio: [`docs/guia_instalacion.md`](docs/guia_instalacion.md). Los dos scripts del paquete también están aquí:
+
+```bash
+Rscript 00_instalar_paquetes.R        # instala los paquetes de R
+Rscript 00_verificar_instalacion.R    # debe terminar en TODO LISTO
+```
+
+### 3. Generar los datos del curso (una sola vez)
+
+El repositorio **no incluye** los datos de trabajo: se generan con una semilla fija, así que te queda el mismo archivo que usamos en clase. Toma un par de segundos:
+
+```bash
+Rscript 00_simular_datos.R            # escribe data/lenga_sim.vcf y los metadatos
+```
+
+Si `data/` está vacío, los notebooks no pueden leer el VCF: este paso es obligatorio antes de la Sección 1.
+
+### 4. Abrir los notebooks
+
+```bash
+conda activate genetica
+jupyter lab
+```
+
+Elige el kernel de **R** (`ir`) y ejecuta las celdas en orden, de arriba hacia abajo.
+
+### 5. Antes de cada clase
+
+```bash
+git pull
+```
+
 ## Requisitos
 
 - **R** ≥ 4.2
