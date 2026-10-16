@@ -14,7 +14,7 @@ Cada **sección** es una unidad autónoma de contenido:
 
 | Sección | Notebook | Contenido | Tarea |
 |---|---|---|---|
-| 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Leer el abstract + formular hipótesis de diversidad |
+| 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | **Revisar el paper del curso** (5 preguntas guía, DOI `10.1002/ppp3.10504`) + mirar un VCF real + formular hipótesis de diversidad |
 | 1 | `seccion1_importar_y_QC.ipynb` | Control de calidad de **datos faltantes**: VCF → matriz de dosis → filtrado por call rate (MAF y LD se cierran en las Secciones 2 y 3) | 5 líneas de Métodos con los dos umbrales + tabla de sensibilidad |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
 
