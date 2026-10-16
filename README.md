@@ -14,7 +14,7 @@ Cada **sección** es una unidad autónoma de contenido:
 
 | Sección | Notebook | Contenido | Tarea |
 |---|---|---|---|
-| 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Mirar un VCF real + hipótesis de diversidad (antes de leer el paper) + **preparar la presentación del paper** (`10.1002/ppp3.10504`) |
+| 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Mirar un VCF real + hipótesis de diversidad (antes de leer el paper) + **presentación completa del paper** con las cinco preguntas metodológicas (`10.1002/ppp3.10504`) |
 | 1 | `seccion1_importar_y_QC.ipynb` | Control de calidad de **datos faltantes**: VCF → matriz de dosis → filtrado por call rate (MAF y LD se cierran en las Secciones 2 y 3) | 5 líneas de Métodos con los dos umbrales + tabla de sensibilidad |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
 
@@ -26,8 +26,6 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - ejercicios guiados (E1, E2…) con su «idea clave»,
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
-
-Para arrancar la primera clase, hay un juego de **diapositivas de introducción** centradas en la metodología: [`diapos/00_introduccion_metodologia.html`](diapos/00_introduccion_metodologia.html) (**51 láminas** autocontenidas; se abren en el navegador y se navega con ← →). Están ordenadas como el curso: **Sección 0** (del árbol al VCF: laboratorio, secuenciación y bioinformática), **Sección 1** (control de calidad de datos faltantes, en cuatro pasos, con las cifras y figuras reales de los datos del curso), **Sección 2** (frecuencia alélica, Ho/He/Fis, MAF, incertidumbre y sesgos) y un **avance de Sección 3** sobre ligamiento (LD). Las láminas marcadas como *diferido* no se dan en la clase de hoy: están para cuando toque esa sección.
 
 ## Requisitos
 
@@ -83,8 +81,6 @@ Debe terminar con `TODO LISTO`.
 │   └── helpers.R                     # funciones del curso (importación, QC, diversidad)
 ├── docs/
 │   └── formato_vcf.md                # explicación de cada columna del VCF
-├── diapos/
-│   └── 00_introduccion_metodologia.html  # diapositivas de introducción (se abre en el navegador)
 ├── datos_ejemplo/
 │   ├── lenga_ejemplo.vcf             # VCF real recortado (3 sitios × 6 ind × 301 SNP)
 │   └── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)
