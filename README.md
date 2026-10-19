@@ -29,6 +29,8 @@ Cada sección termina con una **Tarea** que se revisa al comienzo de la clase si
 - errores y dudas frecuentes,
 - resumen de las ideas principales.
 
+Las **copias para trabajar** —donde van tus respuestas y tus figuras— están en [`tareas/`](tareas/); los notebooks de la raíz son el material de clase (ver *Cómo empezar → 6*).
+
 ## Cómo empezar
 
 ### 1. Traer el repositorio
@@ -73,6 +75,17 @@ Elige el kernel de **R** (`ir`) y ejecuta las celdas en orden, de arriba hacia a
 ```bash
 git pull
 ```
+
+### 6. Dónde hacer los ejercicios: `tareas/`
+
+En `tareas/` están las **copias de los notebooks para trabajar**. Ahí van tus respuestas, tus figuras y tus notas; los notebooks de la raíz son el material de clase y **no se editan** (si los modificas, el próximo `git pull` choca).
+
+```text
+seccion0_introduccion.ipynb            # original (no editar)
+tareas/seccion0_introduccion.ipynb     # tu copia (editar acá)
+```
+
+Instrucciones completas, cómo entregar y problemas frecuentes: [`tareas/README.md`](tareas/README.md).
 
 ## Requisitos
 
@@ -124,6 +137,12 @@ Debe terminar con `TODO LISTO`.
 ├── seccion0_introduccion.ipynb       # Sección 0 (contexto y origen de los datos)
 ├── seccion1_importar_y_QC.ipynb      # Sección 1
 ├── seccion2_diversidad_genetica.ipynb# Sección 2
+├── tareas/                           # copias de trabajo (aquí se edita)
+│   ├── seccion0_introduccion.ipynb
+│   ├── seccion1_importar_y_QC.ipynb
+│   ├── seccion2_diversidad_genetica.ipynb
+│   ├── figuras/                      # figuras para las entregas
+│   └── notas/                        # borradores y apuntes
 ├── R/
 │   └── helpers.R                     # funciones del curso (importación, QC, diversidad)
 ├── docs/
