@@ -19,7 +19,7 @@ Cada **sección** es una unidad autónoma de contenido:
 | 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Mirar un VCF real + hipótesis de diversidad (antes de leer el paper) + **presentación completa del paper** con las cinco preguntas metodológicas (`10.1002/ppp3.10504`) |
 | 1 | `seccion1_importar_y_QC.ipynb` | Control de calidad de **datos faltantes**: VCF → matriz de dosis → filtrado por call rate (MAF y LD se cierran en las Secciones 2 y 3) | 5 líneas de Métodos con los dos umbrales + tabla de sensibilidad |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
-| 3 | `seccion3_revision_vcf.ipynb` | Un **VCF real**: anatomía, ficha técnica y tres señales de alerta (parálogos, profundidad/calidad, réplicas) | Ficha técnica completa + tabla de tres alertas con su decisión |
+| 3 | `seccion3_revision_vcf.ipynb` | Un **VCF real**: anatomía, ficha técnica, tres señales de alerta (parálogos, profundidad/calidad, réplicas) y, sobre el archivo limpio, **diversidad por sitio (Ho, He, Fis) y PCA** | Ficha técnica completa + tabla de tres alertas con su decisión + interpretación del PCA |
 
 Cada sección termina con una **Tarea** que se revisa al comienzo de la clase siguiente, y cada notebook incluye:
 

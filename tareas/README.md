@@ -7,7 +7,7 @@ Aquí están las **copias de los notebooks para que trabajes**. Son tuyas: los e
 | `seccion0_introduccion.ipynb` | Pipeline, formato VCF y las tareas de la Sección 0 |
 | `seccion1_importar_y_QC.ipynb` | QC de datos faltantes y sus ejercicios |
 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap y gradiente latitudinal |
-| `seccion3_revision_vcf.ipynb` | Un VCF real: anatomía, ficha técnica, señales de alerta y filtros |
+| `seccion3_revision_vcf.ipynb` | Un VCF real: anatomía, ficha técnica, señales de alerta, filtros y diversidad + PCA sobre el archivo limpio |
 
 ## La regla
 
