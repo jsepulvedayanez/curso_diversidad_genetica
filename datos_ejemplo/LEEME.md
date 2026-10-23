@@ -11,20 +11,26 @@ Dos conjuntos, ambos **reales** y del mismo estudio (Sekely et al. 2024, *Plants
 
 ## 2. `lenga_real_1782snp.vcf.gz` — el VCF real para trabajar (Sección 3)
 
-**502 muestras × 1 782 SNP × 1 782 contigs**, con `GT:AD:DP:GQ` en cada genotipo y todo el `INFO` original (`AC`, `AF`, `AN`, `QD`, `MQ`, `FS`, `SOR`…).
+**207 muestras × 1 782 SNP × 1 782 contigs**, con `GT:AD:DP:GQ` en cada genotipo y el `INFO` del archivo original, con `AC`, `AF` y `AN` **recalculados** sobre este subconjunto.
 
-Es un subconjunto del VCF publicado (116 136 variantes): **un SNP bialélico PASS al azar por contig**, semilla fija. Los contigs son nodos de un ensamblaje *de novo* (`NODE_*`, `chain_*`), no cromosomas.
-
-- `lenga_real_muestras.csv`: una fila por muestra del VCF, **en el mismo orden** que el archivo. Columnas: `id` (nombre IGA, igual que en el VCF), `arbol_tag`, `arbol_id`, `sitio_n`, `sitio`, `clase_elev`, `lat`, `lon`, `elevacion_m`. **9 muestras no tienen ficha** en el material publicado (quedan en `NA`).
-- `lenga_real_sitios.csv`: los 20 sitios (21–25 árboles cada uno), con altitud y clase de elevación (`high`/`middle`/`low`/`unpaired`).
+- Las 207 muestras son **200 árboles** (10 al azar por sitio, semilla fija), **6 réplicas** y **1 muestra** que quedó casi sin datos (10 genotipos llamados). Las dos últimas cosas son a propósito: son parte de la actividad.
+- Un SNP bialélico PASS al azar por contig. Los contigs son nodos de un ensamblaje *de novo* (`NODE_*`, `chain_*`), no cromosomas.
+- `lenga_real_muestras.csv`: una fila por muestra del VCF, **en el mismo orden** que el archivo. Columnas: `id` (nombre IGA, igual que en el VCF), `arbol_tag`, `arbol_id`, `sitio_n`, `sitio`, `clase_elev`, `lat`, `lon`, `elevacion_m`. **7 muestras no tienen ficha** en el material publicado (quedan en `NA`).
+- `lenga_real_sitios.csv`: los 20 sitios, con 10 árboles cada uno, altitud y clase de elevación (`high`/`middle`/`low`/`unpaired`).
 
 ### Cómo se generó (reproducible)
 
 ```bash
-./scripts/extraer_vcf_real.sh /ruta/variants-gatk_haplotypecaller_SNP.vcf.gz datos_ejemplo
+# 1) extraer con todas las muestras, para poder armar la tabla de metadatos
+./scripts/extraer_vcf_real.sh variants-gatk_haplotypecaller_SNP.vcf.gz datos_ejemplo
+Rscript scripts/hacer_metadatos_reales.R Npumilio_IDs_vcforder_all_info.xlsx datos_ejemplo/lenga_real_1782snp.vcf.gz
+# 2) elegir las 207 muestras: 10 por sitio + 6 réplicas + la muestra casi vacía
+python3 scripts/elegir_muestras.py datos_ejemplo/lenga_real_muestras.csv muestras.txt
+# 3) volver a extraer, ahora con la lista de muestras
+./scripts/extraer_vcf_real.sh variants-gatk_haplotypecaller_SNP.vcf.gz datos_ejemplo muestras.txt
 Rscript scripts/hacer_metadatos_reales.R Npumilio_IDs_vcforder_all_info.xlsx datos_ejemplo/lenga_real_1782snp.vcf.gz
 ```
 
 El script deja el encabezado con solo los contigs usados, quita las dos líneas `##GATKCommandLine` del pipeline original (82 KB de rutas) y agrega una línea `##subsetting` que documenta la regla de selección.
 
-> El archivo completo (495 MB) **no** se versiona: se descarga de Zenodo si hace falta.
+> El archivo completo (495 MB, 502 muestras, 116 136 variantes) **no** se versiona: se descarga de Zenodo si hace falta.

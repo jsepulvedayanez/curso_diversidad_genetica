@@ -1,21 +1,21 @@
 "sitio_n","sitio","clase_elev","lat","lon","elevacion_m","n_arboles"
-1,"Epulaufquen","unpaired",-36.8321,-71.1134,1511,25
-2,"San Martín de los Andes","high",-40.1263,-71.4886,1478,25
-3,"San Martín de los Andes","low",-40.1281,-71.4799,1253,25
-4,"Cerro Otto","high",-41.1482,-71.3783,1382,25
-5,"Cerro Otto","low",-41.1512,-71.3658,1146,24
-6,"La Hoya","unpaired",-42.8341,-71.2592,1442,25
-7,"Trevelin","high",-43.0565,-71.5877,1360,21
-8,"Trevelin","middle",-43.0548,-71.5847,1312,25
-9,"Trevelin","low",-43.0663,-71.574,1085,25
-10,"Lago Guacho","high",-43.8121,-71.4513,1314,25
-11,"Lago Guacho","low",-43.823,-71.4629,1162,25
-12,"José de San Martín","unpaired",-43.8281,-70.757,1317,24
-13,"El Triana","high",-45.6044,-71.7387,915,25
-14,"El Triana","low",-45.6119,-71.7181,729,25
-15,"El Chaltén","high",-49.0749,-72.9001,670,25
-16,"El Chaltén","low",-49.0986,-72.9007,505,25
-17,"El Calafate","high",-50.4683,-72.9687,614,24
-18,"El Calafate","low",-50.4729,-72.979,295,25
-19,"Ushuaia","high",-54.8191,-68.5575,326,25
-20,"Ushuaia","low",-54.8223,-68.5675,20,25
+1,"Epulaufquen","unpaired",-36.8321,-71.1134,1511,10
+2,"San Martín de los Andes","high",-40.1263,-71.4886,1478,10
+3,"San Martín de los Andes","low",-40.1281,-71.4799,1253,10
+4,"Cerro Otto","high",-41.1482,-71.3783,1382,10
+5,"Cerro Otto","low",-41.1512,-71.3658,1146,10
+6,"La Hoya","unpaired",-42.8341,-71.2592,1442,10
+7,"Trevelin","high",-43.0565,-71.5877,1360,10
+8,"Trevelin","middle",-43.0548,-71.5847,1312,10
+9,"Trevelin","low",-43.0663,-71.574,1085,10
+10,"Lago Guacho","high",-43.8121,-71.4513,1314,10
+11,"Lago Guacho","low",-43.823,-71.4629,1162,10
+12,"José de San Martín","unpaired",-43.8281,-70.757,1317,10
+13,"El Triana","high",-45.6044,-71.7387,915,10
+14,"El Triana","low",-45.6119,-71.7181,729,10
+15,"El Chaltén","high",-49.0749,-72.9001,670,10
+16,"El Chaltén","low",-49.0986,-72.9007,505,10
+17,"El Calafate","high",-50.4683,-72.9687,614,10
+18,"El Calafate","low",-50.4729,-72.979,295,10
+19,"Ushuaia","high",-54.8191,-68.5575,326,10
+20,"Ushuaia","low",-54.8223,-68.5675,20,10

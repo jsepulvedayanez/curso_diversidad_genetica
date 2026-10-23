@@ -1,12 +1,12 @@
-# Diversidad genética en lenga · Secciones 1 y 2
+# Diversidad genética en lenga · Secciones 1 a 3
 
 Material docente en **R** para un curso de genética de poblaciones aplicado a *Nothofagus pumilio* (lenga), la especie arbórea dominante de los bosques subantárticos de Patagonia.
 
-Este repositorio contiene una **introducción** (Sección 0) y las **dos primeras secciones** del curso: del archivo VCF a las estimaciones de diversidad genética. Está pensado para trabajarse en **JupyterLab** con kernel de **R**, explicando en clase y con ejercicios guiados.
+Este repositorio contiene una **introducción** (Sección 0) y las **tres primeras secciones** del curso: del archivo VCF a las estimaciones de diversidad genética y al filtrado de un archivo real. Está pensado para trabajarse en **JupyterLab** con kernel de **R**, explicando en clase y con ejercicios guiados.
 
 > **Nota sobre los datos:** se usan datos **simulados** (`00_simular_datos.R`) que imitan rasgos generales de la lenga (rango latitudinal ~2.000 km, estructura alineada con la latitud, gradiente de temperatura). **No son datos biológicos reales**: sirven para practicar el flujo de análisis con una «verdad» conocida.
 >
-> Aparte, el repositorio **sí incluye datos reales de ejemplo** en `datos_ejemplo/`: un recorte de Sekely et al. (2024) —3 sitios × 6 árboles × 301 SNP— que se usa en la Sección 0 para mirar un VCF verdadero. El conjunto completo de ese estudio (20 sitios, 502 árboles, ~47.000 SNP; VCF de 495 MB) está disponible en Zenodo, DOI [`10.5281/zenodo.10018374`](https://doi.org/10.5281/zenodo.10018374) (CC-BY-4.0), pero el curso **no** lo necesita.
+> Aparte, el repositorio **sí incluye datos reales de ejemplo** en `datos_ejemplo/`, los dos de Sekely et al. (2024): un recorte mínimo —3 sitios × 6 árboles × 301 SNP— para mirar un VCF verdadero en la Sección 0, y un **extracto del VCF publicado** —207 muestras × 1 782 SNP, con `GT:AD:DP:GQ`— que es el que se trabaja en la Sección 3. El archivo completo de ese estudio (20 sitios, 502 muestras, 116 136 variantes, 495 MB) está disponible en Zenodo, DOI [`10.5281/zenodo.10018374`](https://doi.org/10.5281/zenodo.10018374) (CC-BY-4.0), pero el curso **no** lo necesita: el extracto se generó con `scripts/extraer_vcf_real.sh` y se puede reproducir.
 
 ---
 
@@ -19,6 +19,7 @@ Cada **sección** es una unidad autónoma de contenido:
 | 0 | `seccion0_introduccion.ipynb` | Contexto: la lenga, el estudio, cómo se genera un VCF | Mirar un VCF real + hipótesis de diversidad (antes de leer el paper) + **presentación completa del paper** con las cinco preguntas metodológicas (`10.1002/ppp3.10504`) |
 | 1 | `seccion1_importar_y_QC.ipynb` | Control de calidad de **datos faltantes**: VCF → matriz de dosis → filtrado por call rate (MAF y LD se cierran en las Secciones 2 y 3) | 5 líneas de Métodos con los dos umbrales + tabla de sensibilidad |
 | 2 | `seccion2_diversidad_genetica.ipynb` | Ho, He, Fis, bootstrap, gradiente latitudinal | Gráfico «publicable» de He con IC + conclusión sin «significativo» |
+| 3 | `seccion3_revision_vcf.ipynb` | Un **VCF real**: anatomía, ficha técnica y tres señales de alerta (parálogos, profundidad/calidad, réplicas) | Ficha técnica completa + tabla de tres alertas con su decisión |
 
 Cada sección termina con una **Tarea** que se revisa al comienzo de la clase siguiente, y cada notebook incluye:
 
@@ -137,10 +138,12 @@ Debe terminar con `TODO LISTO`.
 ├── seccion0_introduccion.ipynb       # Sección 0 (contexto y origen de los datos)
 ├── seccion1_importar_y_QC.ipynb      # Sección 1
 ├── seccion2_diversidad_genetica.ipynb# Sección 2
+├── seccion3_revision_vcf.ipynb       # Sección 3
 ├── tareas/                           # copias de trabajo (aquí se edita)
 │   ├── seccion0_introduccion.ipynb
 │   ├── seccion1_importar_y_QC.ipynb
 │   ├── seccion2_diversidad_genetica.ipynb
+│   ├── seccion3_revision_vcf.ipynb
 │   ├── figuras/                      # figuras para las entregas
 │   └── notas/                        # borradores y apuntes
 ├── R/
@@ -149,7 +152,12 @@ Debe terminar con `TODO LISTO`.
 │   └── formato_vcf.md                # explicación de cada columna del VCF
 ├── datos_ejemplo/
 │   ├── lenga_ejemplo.vcf             # VCF real recortado (3 sitios × 6 ind × 301 SNP)
-│   └── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)
+│   ├── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)
+│   ├── lenga_real_1782snp.vcf.gz     # extracto del VCF publicado (207 muestras × 1 782 SNP)
+│   ├── lenga_real_muestras.csv       # una fila por muestra, en el orden del VCF
+│   ├── lenga_real_sitios.csv         # los 20 sitios de muestreo
+│   └── LEEME.md                      # qué es cada archivo y cómo se generó
+├── scripts/                          # generación reproducible del extracto real
 ├── 00_instalar_paquetes.R            # instala dependencias (ruta B)
 ├── 00_simular_datos.R                # genera el VCF y metadatos simulados
 ├── 00_verificar_instalacion.R        # chequea que todo esté listo
@@ -176,6 +184,18 @@ datos_ejemplo/lenga_ejemplo_meta.csv  # id, pop, loc, lat, lon, alt
 
 - Los 3 sitios cubren todo el rango latitudinal: **Epulaufquen** (norte, ~36.8°S), **Lago Guacho** (centro, ~43.8°S) y **Ushuaia** (sur, ~54.8°S).
 - Viene **sin filtrar** a propósito (incluye SNP monomórficos y raros) para que practiques el QC de la Sección 1.
+
+Y para la Sección 3, un **extracto del VCF publicado**:
+
+```
+datos_ejemplo/lenga_real_1782snp.vcf.gz  # 207 muestras × 1 782 SNP, GT:AD:DP:GQ
+datos_ejemplo/lenga_real_muestras.csv    # id, árbol, sitio, clase de elevación, lat, lon, altitud
+datos_ejemplo/lenga_real_sitios.csv      # los 20 sitios (10 árboles cada uno)
+```
+
+- 200 árboles (10 por sitio) + 6 réplicas + 1 muestra que quedó casi sin datos: las tres cosas son parte de la actividad.
+- Un SNP al azar por contig, en 1 782 contigs: son nodos de un ensamblaje *de novo*, no cromosomas.
+- Ficha completa y receta de generación en [`datos_ejemplo/LEEME.md`](datos_ejemplo/LEEME.md).
 - La explicación de cada columna del VCF está en [`docs/formato_vcf.md`](docs/formato_vcf.md).
 
 **Fuente y licencia:** subconjunto del dataset de Sekely et al. (2024), *Plants, People, Planet* (DOI: 10.1002/ppp3.10504), depositado en Zenodo (DOI: 10.5281/zenodo.10018374) bajo licencia **CC-BY-4.0**.
