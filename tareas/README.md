@@ -18,6 +18,8 @@ Las copias se generaron desde los originales; el código y los textos son idént
 1. Una celda de texto que dice de dónde salió la copia.
 2. Una celda de código que ajusta la ruta de trabajo (`setwd("..")` si el kernel arrancó dentro de `tareas/`), porque el curso usa rutas relativas a la raíz del repositorio. **Ejecútala primero, siempre.**
 
+En la Sección 3 ese ajuste de ruta no está en una celda aparte: va al final de la celda **Preparación (ejecutar primero)**, que igual hay que correr antes que nada.
+
 ## Cómo trabajar
 
 ```bash
