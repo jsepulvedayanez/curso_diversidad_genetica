@@ -11,6 +11,11 @@ data/
 .RData
 .Rproj.user
 Rplots.pdf
+*.Rout
+
+# Python
+__pycache__/
+*.pyc
 
 # Jupyter
 .ipynb_checkpoints/
