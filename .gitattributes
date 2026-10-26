@@ -1,0 +1,5 @@
+# VCF comprimidos: no son texto, no tiene sentido diffearlos
+*.vcf.gz binary
+
+# Scripts de shell con fin de línea LF
+*.sh text eol=lf
