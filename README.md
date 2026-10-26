@@ -1,4 +1,4 @@
-# Diversidad genética en lenga · Secciones 1 a 3
+# Diversidad genética en lenga · Secciones 0 a 3
 
 Material docente en **R** para un curso de genética de poblaciones aplicado a *Nothofagus pumilio* (lenga), la especie arbórea dominante de los bosques subantárticos de Patagonia.
 
@@ -149,15 +149,21 @@ Debe terminar con `TODO LISTO`.
 ├── R/
 │   └── helpers.R                     # funciones del curso (importación, QC, diversidad)
 ├── docs/
-│   └── formato_vcf.md                # explicación de cada columna del VCF
+│   ├── formato_vcf.md                # explicación de cada columna del VCF
+│   └── guia_instalacion.md           # instalación paso a paso (conda, R propio, Colab)
 ├── datos_ejemplo/
 │   ├── lenga_ejemplo.vcf             # VCF real recortado (3 sitios × 6 ind × 301 SNP)
 │   ├── lenga_ejemplo_meta.csv        # metadatos (id, pop, lat, lon, alt)
+│   ├── lenga_sitios.csv              # los 3 sitios del recorte mínimo
 │   ├── lenga_real_1782snp.vcf.gz     # extracto del VCF publicado (207 muestras × 1 782 SNP)
 │   ├── lenga_real_muestras.csv       # una fila por muestra, en el orden del VCF
 │   ├── lenga_real_sitios.csv         # los 20 sitios de muestreo
 │   └── LEEME.md                      # qué es cada archivo y cómo se generó
 ├── scripts/                          # generación reproducible del extracto real
+│   ├── extraer_vcf_real.sh           # recorta el VCF completo, de punta a punta
+│   ├── elegir_snps.py                # un SNP bialélico PASS al azar por contig (semilla 2026)
+│   ├── elegir_muestras.py            # 10 árboles por sitio + 6 réplicas + la muestra casi vacía
+│   └── hacer_metadatos_reales.R      # arma la tabla de muestras desde el xlsx del estudio
 ├── 00_instalar_paquetes.R            # instala dependencias (ruta B)
 ├── 00_simular_datos.R                # genera el VCF y metadatos simulados
 ├── 00_verificar_instalacion.R        # chequea que todo esté listo
